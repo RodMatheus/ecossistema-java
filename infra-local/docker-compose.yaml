@@ -1,0 +1,9 @@
+version: '3'
+volumes:
+  comum_data:
+    driver: local
+services:
+  comum-postgres:
+    extends:
+      file: ./postgres/docker-compose.yaml
+      service: comum-postgres

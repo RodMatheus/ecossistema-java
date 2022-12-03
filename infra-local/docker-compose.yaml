@@ -3,7 +3,36 @@ volumes:
   comum_data:
     driver: local
 services:
+  main:
+    image: tianon/true
+    restart: "no"
+    depends_on:
+      comum-postgres:
+        condition: service_healthy
   comum-postgres:
     extends:
       file: ./postgres/docker-compose.yaml
       service: comum-postgres
+    networks:
+      backing-services:
+        ipv4_address: 172.16.238.101
+  keycloak-dev:
+    extends:
+      file: ./keycloak/docker-compose.yaml
+      service: comum-keycloak
+    networks:
+      backing-services:
+        ipv4_address: 172.16.238.105
+    depends_on:
+      comum-postgres:
+        condition: service_healthy
+networks:
+  backing-services:
+    name: backing-services
+    driver: bridge
+    enable_ipv6: false
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.16.238.0/24
+          gateway: 172.16.238.1

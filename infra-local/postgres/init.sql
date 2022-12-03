@@ -1,1 +1,2 @@
 CREATE DATABASE comum;
+CREATE DATABASE keycloak;

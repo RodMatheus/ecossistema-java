@@ -1,4 +1,4 @@
-package br.com.exemplo.comum.model;
+package br.com.exemplo.comum.domain.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -14,17 +14,17 @@ import java.io.Serializable;
 @Entity
 @Getter
 @Setter(AccessLevel.PRIVATE)
-public class CentroDeCusto implements Serializable {
+public class Departamento implements Serializable {
 
-    public static final long serialVersionUID = 1L;
+        public static final long serialVersionUID = 1L;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+        @Id
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        private Long id;
 
-    @NotBlank
-    private String descricao;
+        @NotBlank
+        private String descricao;
 
-    @NotNull
-    private boolean removido;
-}
+        @NotNull
+        private boolean removido;
+    }

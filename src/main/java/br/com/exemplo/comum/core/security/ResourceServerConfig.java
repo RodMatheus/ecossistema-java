@@ -1,4 +1,4 @@
-package br.com.exemplo.comum.config.security;
+package br.com.exemplo.comum.core.security;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -32,7 +32,13 @@ public class ResourceServerConfig {
         http
            .cors()
                 .and().
-           authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
+           authorizeHttpRequests(auth -> auth
+                   .requestMatchers("/actuator/**").permitAll()
+                   .requestMatchers("/swagger-ui/**").permitAll()
+                   .requestMatchers("/swagger-ui.html").permitAll()
+                   .requestMatchers("/v3/api-docs/**").permitAll()
+                   .requestMatchers("/v3/**").permitAll()
+                   .anyRequest().authenticated())
            .oauth2ResourceServer()
                 .jwt()
                     .jwtAuthenticationConverter(jwtAuthenticationConverter());
@@ -54,13 +60,6 @@ public class ResourceServerConfig {
         jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(grantedAuthoritiesConverter);
 
         return jwtAuthenticationConverter;
-    }
-
-    @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) ->
-                    web.ignoring()
-                            .requestMatchers("/actuator/**");
     }
 
     @Bean

@@ -1,4 +1,4 @@
-package br.com.exemplo.comum.model;
+package br.com.exemplo.comum.domain.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -9,15 +9,12 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.Where;
-
 import java.io.Serializable;
 
 @Entity
 @Getter
 @Setter(AccessLevel.PRIVATE)
-@Where(clause = "removido = true")
-public class Banco implements Serializable {
+public class CentroDeCusto implements Serializable {
 
     public static final long serialVersionUID = 1L;
 
@@ -26,10 +23,7 @@ public class Banco implements Serializable {
     private Long id;
 
     @NotBlank
-    private String nome;
-
-    @NotBlank
-    private String codigo;
+    private String descricao;
 
     @NotNull
     private boolean removido;

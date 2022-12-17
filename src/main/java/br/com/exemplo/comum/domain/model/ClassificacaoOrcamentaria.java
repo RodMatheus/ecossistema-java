@@ -1,4 +1,4 @@
-package br.com.exemplo.comum.model;
+package br.com.exemplo.comum.domain.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -13,7 +13,7 @@ import java.util.List;
 @Entity
 @Getter
 @Setter(AccessLevel.PRIVATE)
-public class PlanoDeContas implements Serializable {
+public class ClassificacaoOrcamentaria implements Serializable {
 
     public static final long serialVersionUID = 1L;
 
@@ -34,16 +34,15 @@ public class PlanoDeContas implements Serializable {
     private boolean receita;
 
     @NotNull
-    private boolean transferenciaEntreContas;
+    private boolean permanente;
 
     @NotNull
     private boolean removido;
 
     @JoinColumn
     @ManyToOne(fetch = FetchType.LAZY)
-    private PlanoDeContas pai;
-
+    private ClassificacaoOrcamentaria pai;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "pai")
-    private List<PlanoDeContas> filhos;
+    private List<ClassificacaoOrcamentaria> filhos;
 }

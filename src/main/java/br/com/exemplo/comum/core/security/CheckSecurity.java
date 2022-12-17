@@ -1,4 +1,4 @@
-package br.com.exemplo.comum.config.security;
+package br.com.exemplo.comum.core.security;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 

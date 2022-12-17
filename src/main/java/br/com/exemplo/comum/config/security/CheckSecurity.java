@@ -26,5 +26,15 @@ public @interface CheckSecurity {
         @Retention(RUNTIME)
         @Target(METHOD)
         @interface view{}
+
+        @PreAuthorize("hasAnyAuthority('COMUM_ADMIN, COMUM_EDIT, COMUM_VIEW')")
+        @Retention(RUNTIME)
+        @Target(METHOD)
+        @interface all{}
+
+        @PreAuthorize("hasAnyAuthority('COMUM_ADMIN, COMUM_EDIT')")
+        @Retention(RUNTIME)
+        @Target(METHOD)
+        @interface maintain{}
     }
 }

@@ -14,7 +14,7 @@ public class MessageConfig {
     public MessageSource messageSource() {
         ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
 
-        messageSource.setBasenames("classpath:messages");
+        messageSource.setBasenames("classpath:message");
         messageSource.setUseCodeAsDefaultMessage(Boolean.FALSE);
         messageSource.setDefaultEncoding("UTF-8");
         messageSource.setDefaultLocale(new Locale("pt", "BR"));

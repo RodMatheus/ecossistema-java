@@ -1,4 +1,4 @@
-package br.com.exemplo.comum.domain.model;
+package br.com.exemplo.comum.domain.model.entities;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -9,13 +9,12 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
-
 import java.io.Serializable;
 
 @Entity
 @Getter
 @Setter(AccessLevel.PRIVATE)
-public class Projeto implements Serializable {
+public class Banco implements Serializable {
 
     public static final long serialVersionUID = 1L;
 
@@ -24,7 +23,10 @@ public class Projeto implements Serializable {
     private Long id;
 
     @NotBlank
-    private String descricao;
+    private String nome;
+
+    @NotBlank
+    private String codigo;
 
     @NotNull
     private boolean removido;

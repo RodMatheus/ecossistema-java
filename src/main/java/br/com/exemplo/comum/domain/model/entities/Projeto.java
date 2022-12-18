@@ -1,4 +1,4 @@
-package br.com.exemplo.comum.domain.model;
+package br.com.exemplo.comum.domain.model.entities;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -9,22 +9,23 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+
 import java.io.Serializable;
 
 @Entity
 @Getter
 @Setter(AccessLevel.PRIVATE)
-public class Departamento implements Serializable {
+public class Projeto implements Serializable {
 
-        public static final long serialVersionUID = 1L;
+    public static final long serialVersionUID = 1L;
 
-        @Id
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
-        private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-        @NotBlank
-        private String descricao;
+    @NotBlank
+    private String descricao;
 
-        @NotNull
-        private boolean removido;
-    }
+    @NotNull
+    private boolean removido;
+}

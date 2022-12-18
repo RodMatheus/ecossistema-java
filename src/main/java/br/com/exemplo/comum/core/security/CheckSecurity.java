@@ -27,12 +27,12 @@ public @interface CheckSecurity {
         @Target(METHOD)
         @interface view{}
 
-        @PreAuthorize("hasAnyAuthority('COMUM_ADMIN, COMUM_EDIT, COMUM_VIEW')")
+        @PreAuthorize("hasAuthority('COMUM_ADMIN') or hasAuthority('COMUM_EDIT') or hasAuthority('COMUM_VIEW')")
         @Retention(RUNTIME)
         @Target(METHOD)
         @interface all{}
 
-        @PreAuthorize("hasAnyAuthority('COMUM_ADMIN, COMUM_EDIT')")
+        @PreAuthorize("hasAuthority('COMUM_ADMIN') or hasAuthority('COMUM_EDIT')")
         @Retention(RUNTIME)
         @Target(METHOD)
         @interface maintain{}

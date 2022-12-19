@@ -37,6 +37,10 @@ public class Departamento implements Serializable {
         return departamento;
     }
 
+    public static void ofExclusao(Departamento departamento) {
+        departamento.setRemovido(Boolean.TRUE);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -35,7 +35,6 @@ public class DepartamentoController implements DepartamentoControllerOpenApi {
         this.departamentoService = departamentoService;
         this.departamentoRepository = departamentoRepository;
         this.departamentoMapper = departamentoMapper;
-
     }
 
     @GetMapping
@@ -75,6 +74,20 @@ public class DepartamentoController implements DepartamentoControllerOpenApi {
        log.info("Retornando resposta da operação.");
         return ResponseEntity
                 .status(HttpStatus.CREATED)
+                .build();
+    }
+
+    @DeleteMapping("/{id}")
+    @CheckSecurity.comum.maintain
+    public ResponseEntity<Void> DELETE(@PathVariable Long id) {
+        log.info("EXCLUSÃO DE DEPARTAMENTOS");
+
+        log.info("Iniciando processo de exclusão de departamento.");
+        departamentoService.removeDepartamento(id);
+
+        log.info("Retornando resposta da operação.");
+        return ResponseEntity
+                .noContent()
                 .build();
     }
 }

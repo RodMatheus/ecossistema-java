@@ -44,11 +44,13 @@ public class LogAuditoria implements Serializable {
     @Column(name = "usuario_logado")
     private String usuario;
 
-    public static LogAuditoria ofInclusao(final String usuario, final String entidade) {
+    public static LogAuditoria ofInclusao(final String usuario, final String entidade, final String nomeEntitade) {
 
         LocalDateTime horario = LocalDateTime.now();
         StringBuilder evento = new StringBuilder();
-        evento.append("Criação de registro de ponto às: ");
+        evento.append("Criação de registro de ");
+        evento.append(nomeEntitade);
+        evento.append(" às: ");
         evento.append(horario);
         evento.append(".");
         evento.append(" Operação realizada pelo usuário: ");
@@ -64,11 +66,34 @@ public class LogAuditoria implements Serializable {
         return log;
     }
 
-    public static LogAuditoria ofAlteracao(final String usuario, final String entidade) {
+    public static LogAuditoria ofAlteracao(final String usuario, final String entidade, final String nomeEntitade) {
 
         LocalDateTime horario = LocalDateTime.now();
         StringBuilder evento = new StringBuilder();
-        evento.append("Alteração de registro de ponto às: ");
+        evento.append("Alteração de registro de ");
+        evento.append(nomeEntitade);
+        evento.append(" às: ");
+        evento.append(horario);
+        evento.append(".");
+        evento.append(" Operação realizada pelo usuário: ");
+        evento.append(usuario);
+
+        LogAuditoria log = new LogAuditoria();
+        log.setOperacao(OperacaoAuditoria.ALTERACAO);
+        log.setEvento(evento.toString());
+        log.setDataOcorrencia(horario);
+        log.setEntidade(entidade);
+        log.setUsuario(usuario);
+
+        return log;
+    }
+
+    public static LogAuditoria ofExclusao(final String usuario, final String entidade, final String nomeEntitade) {
+        LocalDateTime horario = LocalDateTime.now();
+        StringBuilder evento = new StringBuilder();
+        evento.append("Exclusão de registro de ");
+        evento.append(nomeEntitade);
+        evento.append(" às: ");
         evento.append(horario);
         evento.append(".");
         evento.append(" Operação realizada pelo usuário: ");

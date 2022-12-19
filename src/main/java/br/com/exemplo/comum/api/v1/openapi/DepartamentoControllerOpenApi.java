@@ -37,6 +37,19 @@ public interface DepartamentoControllerOpenApi {
             @Parameter(in = ParameterIn.QUERY, example = "1", description = "Definição do página") Integer page,
             @Parameter(in = ParameterIn.QUERY, example = "10", description = "Definição do tamanho da lista") Integer size);
 
+    @Operation(summary = "Lista departamento",
+            description = "Endpoint para a listagem detalhada de um departamento.",
+            responses = {
+                    @ApiResponse(responseCode = "500", description = WebUtil.INTERNAL_SERVER_DEFAULT_RESPONSE,
+                            content = @Content(schema = @Schema(implementation = ErroDTO.class))),
+                    @ApiResponse(responseCode = "404", description = WebUtil.NOT_FOUND_DEFAULT_RESPONSE,
+                            content = @Content(schema = @Schema(implementation = ErroDTO.class))),
+                    @ApiResponse(responseCode = "401", description = WebUtil.UNAUTHORIZED_DEFAULT_RESPONSE,
+                            content = @Content(schema = @Schema(implementation = ErroDTO.class))),
+                    @ApiResponse(responseCode = "200")
+            })
+    ResponseEntity<DepartamentoDTO> getById(@Parameter(required = true, in = ParameterIn.PATH) Long id);
+
     @Operation(summary = "Cadastra departamentos",
             description = "Endpoint para cadastrar novos de departamentos.",
             responses = {
@@ -52,6 +65,24 @@ public interface DepartamentoControllerOpenApi {
     })
     ResponseEntity<Void> post(@Parameter(required = true) DepartamentoParam departamentoParam);
 
+    @Operation(summary = "Atualiza departamentos",
+            description = "Endpoint para atualizar um departamento.",
+            responses = {
+                    @ApiResponse(responseCode = "500", description = WebUtil.INTERNAL_SERVER_DEFAULT_RESPONSE,
+                            content = @Content(schema = @Schema(implementation = ErroDTO.class))),
+                    @ApiResponse(responseCode = "404", description = WebUtil.NOT_FOUND_DEFAULT_RESPONSE,
+                            content = @Content(schema = @Schema(implementation = ErroDTO.class))),
+                    @ApiResponse(responseCode = "403", description = WebUtil.FORBIDDEN_DEFAULT_RESPONSE,
+                            content = @Content(schema = @Schema(implementation = ErroDTO.class))),
+                    @ApiResponse(responseCode = "401", description = WebUtil.UNAUTHORIZED_DEFAULT_RESPONSE,
+                            content = @Content(schema = @Schema(implementation = ErroDTO.class))),
+                    @ApiResponse(responseCode = "400", description = WebUtil.BAD_REQUEST_DEFAULT_RESPONSE,
+                            content = @Content(schema = @Schema(implementation = ErroDTO.class))),
+                    @ApiResponse(responseCode = "201")
+            })
+    ResponseEntity<DepartamentoDTO> put(
+            @Parameter(required = true, in = ParameterIn.PATH) Long id,
+            @Parameter(required = true) DepartamentoParam departamentoParam);
     @Operation(summary = "Exclui departamentos",
             description = "Endpoint para excluir departamentos.",
             responses = {

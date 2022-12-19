@@ -50,12 +50,36 @@ public class DepartamentoService {
                 .orElseThrow(() -> new RecursoNaoEncontradoException(
                         mensagemUtil.mensagemPersonalizada("erro.departamento-nao-encontrado")));
 
-        log.info("Alterando status de removido da entidade");
+        log.info("Alterando status de removido da entidade.");
         Departamento.ofExclusao(departamento);
 
         log.info("Gerando log de transação.");
         LogAuditoria logAuditoria = LogAuditoria.ofExclusao(SecurityUtil.getUsuarioLogado(),
                 Utilitarios.convertEntityLog(departamento), Departamento.class.getSimpleName());
         logAuditoriaRepository.save(logAuditoria);
+    }
+
+    @Transactional
+    public Departamento atualizaDepartamento(final DepartamentoParam departamentoParam, final Long id) {
+        log.info("Verificando a existência do departamento. ID: {}.", id);
+        Departamento departamento = departamentoRepository.findByIdAndRemovidoIsFalse(id)
+                .orElseThrow(() -> new RecursoNaoEncontradoException(
+                        mensagemUtil.mensagemPersonalizada("erro.departamento-nao-encontrado")));
+
+        log.info("Atualizando entidade de Departamento.");
+        Departamento.ofUpdate(departamento, departamentoParam);
+
+        log.info("Gerando log de transação.");
+        LogAuditoria logAuditoria = LogAuditoria.ofAlteracao(SecurityUtil.getUsuarioLogado(),
+                Utilitarios.convertEntityLog(departamento), Departamento.class.getSimpleName());
+        logAuditoriaRepository.save(logAuditoria);
+        return departamento;
+    }
+
+    public Departamento pesquisaPorId(final Long id) {
+        log.info("Verificando a existência do departamento. ID: {}.", id);
+        return departamentoRepository.findById(id)
+                .orElseThrow(() -> new RecursoNaoEncontradoException(
+                        mensagemUtil.mensagemPersonalizada("erro.departamento-nao-encontrado")));
     }
 }

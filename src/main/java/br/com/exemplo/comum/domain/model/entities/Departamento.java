@@ -1,5 +1,6 @@
 package br.com.exemplo.comum.domain.model.entities;
 
+import br.com.exemplo.comum.api.v1.model.input.DepartamentoParam;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -39,6 +40,10 @@ public class Departamento implements Serializable {
 
     public static void ofExclusao(Departamento departamento) {
         departamento.setRemovido(Boolean.TRUE);
+    }
+
+    public static void ofUpdate(Departamento departamento, DepartamentoParam departamentoParam) {
+        departamento.setDescricao(departamentoParam.nome());
     }
 
     @Override

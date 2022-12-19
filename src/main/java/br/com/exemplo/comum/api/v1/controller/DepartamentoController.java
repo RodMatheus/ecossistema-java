@@ -63,6 +63,21 @@ public class DepartamentoController implements DepartamentoControllerOpenApi {
                 .body(departamentosDTO);
     }
 
+    @GetMapping("/{id}")
+    @CheckSecurity.comum.all
+    public ResponseEntity<DepartamentoDTO> getById(@PathVariable Long id) {
+        log.info("LISTAGEM DE DEPARTAMENTO POR ID");
+
+        log.info("Iniciando processo de busca por ID. ID: {}.", id);
+        final Departamento departamento = departamentoService.pesquisaPorId(id);
+
+        log.info("Convertendo entidade de Departamento em DTO. DEPARTAMENTO: {}.", departamento);
+        final DepartamentoDTO departamentoDTO = departamentoMapper.toResource(departamento);
+
+        log.info("Retornando resposta da operação.");
+        return ResponseEntity.ok(departamentoDTO);
+    }
+
     @PostMapping
     @CheckSecurity.comum.maintain
     public ResponseEntity<Void> post(@Valid @RequestBody DepartamentoParam departamentoParam) {
@@ -72,9 +87,24 @@ public class DepartamentoController implements DepartamentoControllerOpenApi {
         departamentoService.cadastraDepartamento(departamentoParam);
 
        log.info("Retornando resposta da operação.");
-        return ResponseEntity
+       return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .build();
+    }
+
+    @PutMapping("/{id}")
+    @CheckSecurity.comum.maintain
+    public ResponseEntity<DepartamentoDTO> put(@PathVariable Long id, @Valid @RequestBody DepartamentoParam departamentoParam) {
+        log.info("ATUALIZAÇÃO DE DEPARTAMENTOS");
+
+        log.info("Iniciando processo de atualização do departamento. DEPARTAMENTO: {}.", departamentoParam);
+        final Departamento departamento = departamentoService.atualizaDepartamento(departamentoParam, id);
+
+        log.info("Convertendo entidade de Departamento em DTO. DEPARTAMENTO: {}.", departamento);
+        final DepartamentoDTO departamentoDTO = departamentoMapper.toResource(departamento);
+
+        log.info("Retornando resposta da operação.");
+        return ResponseEntity.ok(departamentoDTO);
     }
 
     @DeleteMapping("/{id}")

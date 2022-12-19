@@ -1,9 +1,9 @@
 package br.com.exemplo.comum.infrastructure.repository;
 
-import br.com.exemplo.comum.api.v1.filter.FiltroDepartamento;
-import br.com.exemplo.comum.domain.model.entities.Departamento;
-import br.com.exemplo.comum.domain.model.entities.Departamento_;
-import br.com.exemplo.comum.domain.repository.DepartamentoRepositoryCustom;
+import br.com.exemplo.comum.api.v1.filter.FiltroProjeto;
+import br.com.exemplo.comum.domain.model.entities.Projeto;
+import br.com.exemplo.comum.domain.model.entities.Projeto_;
+import br.com.exemplo.comum.domain.repository.ProjetoRepositoryCustom;
 import br.com.exemplo.comum.infrastructure.util.Utilitarios;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -19,17 +19,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public class DepartamentoRepositoryImpl implements DepartamentoRepositoryCustom {
+public class ProjetoRepositoryImpl implements ProjetoRepositoryCustom {
 
     @PersistenceContext
     private EntityManager manager;
 
     @Override
-    public Long contaPorFiltros(FiltroDepartamento filtros) {
+    public Long contaPorFiltros(FiltroProjeto filtros) {
         CriteriaBuilder builder = manager.getCriteriaBuilder();
         CriteriaQuery<Long> criteria = builder.createQuery(Long.class);
         
-        Root<Departamento> root = criteria.from(Departamento.class);
+        Root<Projeto> root = criteria.from(Projeto.class);
         criteria.select(builder.count(root));
         
         List<Predicate> predicates = aplicaFiltros(filtros, root, builder);
@@ -38,12 +38,12 @@ public class DepartamentoRepositoryImpl implements DepartamentoRepositoryCustom 
     }
 
     @Override
-    public List<Departamento> pesquisaPorFiltros(FiltroDepartamento filtros, Pageable paginacao) {
+    public List<Projeto> pesquisaPorFiltros(FiltroProjeto filtros, Pageable paginacao) {
         CriteriaBuilder builder = manager.getCriteriaBuilder();
-        CriteriaQuery<Departamento> criteria = builder.createQuery(Departamento.class);
-        Root<Departamento> root = criteria.from(Departamento.class);
+        CriteriaQuery<Projeto> criteria = builder.createQuery(Projeto.class);
+        Root<Projeto> root = criteria.from(Projeto.class);
 
-        criteria.orderBy(builder.asc(root.get(Departamento_.NOME)));
+        criteria.orderBy(builder.asc(root.get(Projeto_.NOME)));
 
         List<Predicate> predicates = aplicaFiltros(filtros, root, builder);
         criteria.where(predicates.toArray(new Predicate[predicates.size()]));
@@ -54,14 +54,14 @@ public class DepartamentoRepositoryImpl implements DepartamentoRepositoryCustom 
                 .getResultList();
     }
 
-    private List<Predicate> aplicaFiltros(FiltroDepartamento filtros, Root<Departamento> root, CriteriaBuilder builder) {
+    private List<Predicate> aplicaFiltros(FiltroProjeto filtros, Root<Projeto> root, CriteriaBuilder builder) {
         ArrayList<Predicate> predicates = new ArrayList<>();
 
-        predicates.add(builder.isFalse(root.get(Departamento_.REMOVIDO)));
+        predicates.add(builder.isFalse(root.get(Projeto_.REMOVIDO)));
 
         if(!StringUtils.isEmpty(filtros.nome())) {
             predicates.add(
-                    builder.like(root.get(Departamento_.NOME), Utilitarios.likeFunction(filtros.nome())));
+                    builder.like(root.get(Projeto_.NOME), Utilitarios.likeFunction(filtros.nome())));
         }
         return predicates;
     }

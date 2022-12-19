@@ -44,9 +44,9 @@ public class LogAuditoria implements Serializable {
     @Column(name = "usuario_logado")
     private String usuario;
 
-    public static LogAuditoria ofInclusao(final String usuario, final String entidade, final String nomeEntitade) {
+    public static LogAuditoria ofInclusao(final String usuario, final String entidade, final Object classe) {
         final LocalDateTime horario = LocalDateTime.now();
-        final String evento = geraEvento(usuario, nomeEntitade, horario, OperacaoAuditoria.INCLUSAO);
+        final String evento = geraEvento(usuario, classe, horario, OperacaoAuditoria.INCLUSAO);
 
         LogAuditoria log = new LogAuditoria();
         log.setOperacao(OperacaoAuditoria.INCLUSAO);
@@ -58,9 +58,9 @@ public class LogAuditoria implements Serializable {
         return log;
     }
 
-    public static LogAuditoria ofAlteracao(final String usuario, final String entidade, final String nomeEntitade) {
+    public static LogAuditoria ofAlteracao(final String usuario, final String entidade, final Object classe) {
         final LocalDateTime horario = LocalDateTime.now();
-        final String evento = geraEvento(usuario, nomeEntitade, horario, OperacaoAuditoria.ALTERACAO);
+        final String evento = geraEvento(usuario, classe, horario, OperacaoAuditoria.ALTERACAO);
 
         LogAuditoria log = new LogAuditoria();
         log.setOperacao(OperacaoAuditoria.ALTERACAO);
@@ -72,9 +72,9 @@ public class LogAuditoria implements Serializable {
         return log;
     }
 
-    public static LogAuditoria ofExclusao(final String usuario, final String entidade, final String nomeEntitade) {
+    public static LogAuditoria ofExclusao(final String usuario, final String entidade, final Object classe) {
         final LocalDateTime horario = LocalDateTime.now();
-        final String evento = geraEvento(usuario, nomeEntitade, horario, OperacaoAuditoria.EXCLUSAO);
+        final String evento = geraEvento(usuario, classe, horario, OperacaoAuditoria.EXCLUSAO);
 
         LogAuditoria log = new LogAuditoria();
         log.setOperacao(OperacaoAuditoria.ALTERACAO);
@@ -86,12 +86,12 @@ public class LogAuditoria implements Serializable {
         return log;
     }
 
-    public static String geraEvento(final String usuario, final String nomeEntitade, final LocalDateTime horario,
+    public static String geraEvento(final String usuario, final Object classe, final LocalDateTime horario,
                                     final OperacaoAuditoria operacao) {
         StringBuilder evento = new StringBuilder();
         evento.append(operacao.getNome());
         evento.append(" de registro de ");
-        evento.append(nomeEntitade);
+        evento.append(classe.getClass().getSimpleName());
         evento.append(" às: ");
         evento.append(horario);
         evento.append(".");

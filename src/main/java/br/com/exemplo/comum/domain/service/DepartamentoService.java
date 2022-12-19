@@ -39,7 +39,7 @@ public class DepartamentoService {
 
         log.info("Gerando log de transação.");
         LogAuditoria logAuditoria = LogAuditoria.ofInclusao(SecurityUtil.getUsuarioLogado(),
-                Utilitarios.convertEntityLog(departamento), Departamento.class.getSimpleName());
+                Utilitarios.convertEntityLog(departamento), Departamento.class);
         logAuditoriaRepository.save(logAuditoria);
     }
 
@@ -55,7 +55,7 @@ public class DepartamentoService {
 
         log.info("Gerando log de transação.");
         LogAuditoria logAuditoria = LogAuditoria.ofExclusao(SecurityUtil.getUsuarioLogado(),
-                Utilitarios.convertEntityLog(departamento), Departamento.class.getSimpleName());
+                Utilitarios.convertEntityLog(departamento), Departamento.class);
         logAuditoriaRepository.save(logAuditoria);
     }
 
@@ -67,16 +67,16 @@ public class DepartamentoService {
                         mensagemUtil.mensagemPersonalizada("erro.departamento-nao-encontrado")));
 
         log.info("Atualizando entidade de Departamento.");
-        Departamento.ofUpdate(departamento, departamentoParam);
+        Departamento.ofAlteracao(departamento, departamentoParam);
 
         log.info("Gerando log de transação.");
         LogAuditoria logAuditoria = LogAuditoria.ofAlteracao(SecurityUtil.getUsuarioLogado(),
-                Utilitarios.convertEntityLog(departamento), Departamento.class.getSimpleName());
+                Utilitarios.convertEntityLog(departamento), Departamento.class);
         logAuditoriaRepository.save(logAuditoria);
         return departamento;
     }
 
-    public Departamento pesquisaPorId(final Long id) {
+    public Departamento pesquisaDepartamentoPorId(final Long id) {
         log.info("Verificando a existência do departamento. ID: {}.", id);
         return departamentoRepository.findById(id)
                 .orElseThrow(() -> new RecursoNaoEncontradoException(

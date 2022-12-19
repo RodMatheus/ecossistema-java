@@ -1,9 +1,9 @@
 package br.com.exemplo.comum.api.v1.openapi;
 
 import br.com.exemplo.comum.api.exceptionhandler.ErroDTO;
-import br.com.exemplo.comum.api.v1.filter.FiltroDepartamento;
-import br.com.exemplo.comum.api.v1.model.dto.DepartamentoDTO;
-import br.com.exemplo.comum.api.v1.model.input.DepartamentoParam;
+import br.com.exemplo.comum.api.v1.filter.FiltroProjeto;
+import br.com.exemplo.comum.api.v1.model.dto.ProjetoDTO;
+import br.com.exemplo.comum.api.v1.model.input.ProjetoParam;
 import br.com.exemplo.comum.infrastructure.util.WebUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -17,11 +17,11 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
-@Tag(name = "Departamentos", description = "Gerência de departamentos")
-public interface DepartamentoControllerOpenApi {
+@Tag(name = "Projetos", description = "Gerência de projetos")
+public interface ProjetoControllerOpenApi {
 
-    @Operation(summary = "Lista de departamentos",
-        description = "Endpoint para a listagem de departamentos.",
+    @Operation(summary = "Lista de projetos",
+        description = "Endpoint para a listagem de projetos com filtros.",
           responses = {
             @ApiResponse(responseCode = "500", description = WebUtil.INTERNAL_SERVER_DEFAULT_RESPONSE,
                 content = @Content(schema = @Schema(implementation = ErroDTO.class))),
@@ -32,13 +32,13 @@ public interface DepartamentoControllerOpenApi {
                         description = "Totalização de todos os registros existentes com os filtros selecionados.",
                         schema = @Schema(implementation = Integer.class)))
     })
-    ResponseEntity<List<DepartamentoDTO>> get(
-            @Parameter(in = ParameterIn.QUERY, description = "Filtros de departamento") FiltroDepartamento filtros,
+    ResponseEntity<List<ProjetoDTO>> get(
+            @Parameter(in = ParameterIn.QUERY, description = "Filtros de projeto") FiltroProjeto filtros,
             @Parameter(in = ParameterIn.QUERY, example = "1", description = "Definição do página") Integer page,
             @Parameter(in = ParameterIn.QUERY, example = "10", description = "Definição do tamanho da lista") Integer size);
 
-    @Operation(summary = "Lista departamento",
-            description = "Endpoint para a listagem detalhada de um departamento.",
+    @Operation(summary = "Lista projeto",
+            description = "Endpoint para a listagem detalhada de um projeto.",
             responses = {
                     @ApiResponse(responseCode = "500", description = WebUtil.INTERNAL_SERVER_DEFAULT_RESPONSE,
                             content = @Content(schema = @Schema(implementation = ErroDTO.class))),
@@ -48,10 +48,10 @@ public interface DepartamentoControllerOpenApi {
                             content = @Content(schema = @Schema(implementation = ErroDTO.class))),
                     @ApiResponse(responseCode = "200")
             })
-    ResponseEntity<DepartamentoDTO> getById(@Parameter(required = true, in = ParameterIn.PATH) Long id);
+    ResponseEntity<ProjetoDTO> getById(@Parameter(required = true, in = ParameterIn.PATH) Long id);
 
-    @Operation(summary = "Cadastra departamentos",
-            description = "Endpoint para cadastrar novos de departamentos.",
+    @Operation(summary = "Cadastra Projetos",
+            description = "Endpoint para cadastrar novos de projetos.",
             responses = {
                     @ApiResponse(responseCode = "500", description = WebUtil.INTERNAL_SERVER_DEFAULT_RESPONSE,
                             content = @Content(schema = @Schema(implementation = ErroDTO.class))),
@@ -63,10 +63,10 @@ public interface DepartamentoControllerOpenApi {
                             content = @Content(schema = @Schema(implementation = ErroDTO.class))),
                     @ApiResponse(responseCode = "201")
     })
-    ResponseEntity<Void> post(@Parameter(required = true) DepartamentoParam departamentoParam);
+    ResponseEntity<Void> post(@Parameter(required = true) ProjetoParam projetoParam);
 
-    @Operation(summary = "Atualiza departamentos",
-            description = "Endpoint para atualizar um departamento.",
+    @Operation(summary = "Atualiza projetos",
+            description = "Endpoint para atualizar um projeto.",
             responses = {
                     @ApiResponse(responseCode = "500", description = WebUtil.INTERNAL_SERVER_DEFAULT_RESPONSE,
                             content = @Content(schema = @Schema(implementation = ErroDTO.class))),
@@ -80,12 +80,12 @@ public interface DepartamentoControllerOpenApi {
                             content = @Content(schema = @Schema(implementation = ErroDTO.class))),
                     @ApiResponse(responseCode = "200")
             })
-    ResponseEntity<DepartamentoDTO> put(
+    ResponseEntity<ProjetoDTO> put(
             @Parameter(required = true, in = ParameterIn.PATH) Long id,
-            @Parameter(required = true) DepartamentoParam departamentoParam);
+            @Parameter(required = true) ProjetoParam projetoParam);
 
-    @Operation(summary = "Exclui departamentos",
-            description = "Endpoint para excluir departamentos.",
+    @Operation(summary = "Exclui projetos",
+            description = "Endpoint para excluir projetos.",
             responses = {
                     @ApiResponse(responseCode = "500", description = WebUtil.INTERNAL_SERVER_DEFAULT_RESPONSE,
                             content = @Content(schema = @Schema(implementation = ErroDTO.class))),

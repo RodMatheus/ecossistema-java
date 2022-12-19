@@ -25,14 +25,14 @@ public class Departamento implements Serializable {
     private Long id;
 
     @NotBlank
-    private String descricao;
+    private String nome;
 
     @NotNull
     private boolean removido;
 
     public static Departamento of(final String nome) {
         Departamento departamento = new Departamento();
-        departamento.setDescricao(nome);
+        departamento.setNome(nome);
         departamento.setRemovido(Boolean.FALSE);
 
         return departamento;
@@ -42,8 +42,8 @@ public class Departamento implements Serializable {
         departamento.setRemovido(Boolean.TRUE);
     }
 
-    public static void ofUpdate(Departamento departamento, DepartamentoParam departamentoParam) {
-        departamento.setDescricao(departamentoParam.nome());
+    public static void ofAlteracao(Departamento departamento, DepartamentoParam departamentoParam) {
+        departamento.setNome(departamentoParam.nome());
     }
 
     @Override
@@ -51,19 +51,19 @@ public class Departamento implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Departamento that = (Departamento) o;
-        return removido == that.removido && id.equals(that.id) && descricao.equals(that.descricao);
+        return removido == that.removido && id.equals(that.id) && nome.equals(that.nome);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, descricao, removido);
+        return Objects.hash(id, nome, removido);
     }
 
     @Override
     public String toString() {
         return "Departamento{" +
                 "id=" + id +
-                ", descricao='" + descricao + '\'' +
+                ", nome='" + nome + '\'' +
                 ", removido=" + removido +
                 '}';
     }

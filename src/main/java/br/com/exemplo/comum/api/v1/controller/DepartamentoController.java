@@ -69,7 +69,7 @@ public class DepartamentoController implements DepartamentoControllerOpenApi {
         log.info("LISTAGEM DE DEPARTAMENTO POR ID");
 
         log.info("Iniciando processo de busca por ID. ID: {}.", id);
-        final Departamento departamento = departamentoService.pesquisaPorId(id);
+        final Departamento departamento = departamentoService.pesquisaDepartamentoPorId(id);
 
         log.info("Convertendo entidade de Departamento em DTO. DEPARTAMENTO: {}.", departamento);
         final DepartamentoDTO departamentoDTO = departamentoMapper.toResource(departamento);
@@ -109,7 +109,7 @@ public class DepartamentoController implements DepartamentoControllerOpenApi {
 
     @DeleteMapping("/{id}")
     @CheckSecurity.comum.maintain
-    public ResponseEntity<Void> DELETE(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         log.info("EXCLUSÃO DE DEPARTAMENTOS");
 
         log.info("Iniciando processo de exclusão de departamento.");

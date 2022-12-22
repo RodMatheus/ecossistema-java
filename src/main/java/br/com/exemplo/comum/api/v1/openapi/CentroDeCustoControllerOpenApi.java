@@ -1,9 +1,9 @@
 package br.com.exemplo.comum.api.v1.openapi;
 
 import br.com.exemplo.comum.api.exceptionhandler.ErroDTO;
-import br.com.exemplo.comum.api.v1.filter.FiltroProjeto;
-import br.com.exemplo.comum.api.v1.model.dto.ProjetoDTO;
-import br.com.exemplo.comum.api.v1.model.input.ProjetoParam;
+import br.com.exemplo.comum.api.v1.filter.FiltroCentroDeCusto;
+import br.com.exemplo.comum.api.v1.model.dto.CentroDeCustoDTO;
+import br.com.exemplo.comum.api.v1.model.input.CentroDeCustoParam;
 import br.com.exemplo.comum.infrastructure.util.WebUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -17,11 +17,11 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
-@Tag(name = "Projetos", description = "Gerência de projetos")
-public interface ProjetoControllerOpenApi {
+@Tag(name = "Centros de custo", description = "Gerência de centros de custo")
+public interface CentroDeCustoControllerOpenApi {
 
-    @Operation(summary = "Lista de projetos",
-        description = "Endpoint para a listagem de projetos com filtros.",
+    @Operation(summary = "Lista de centros de custos",
+        description = "Endpoint para a listagem de centros de custo com filtros.",
           responses = {
             @ApiResponse(responseCode = "500", description = WebUtil.INTERNAL_SERVER_DEFAULT_RESPONSE,
                 content = @Content(schema = @Schema(implementation = ErroDTO.class))),
@@ -32,13 +32,13 @@ public interface ProjetoControllerOpenApi {
                         description = "Totalização de todos os registros existentes com os filtros selecionados.",
                         schema = @Schema(implementation = Integer.class)))
     })
-    ResponseEntity<List<ProjetoDTO>> get(
-            @Parameter(in = ParameterIn.QUERY, description = "Filtros de projeto") FiltroProjeto filtros,
+    ResponseEntity<List<CentroDeCustoDTO>> get(
+            @Parameter(in = ParameterIn.QUERY, description = "Filtros de centros de custo") FiltroCentroDeCusto filtros,
             @Parameter(in = ParameterIn.QUERY, example = "1", description = "Definição do página") Integer page,
             @Parameter(in = ParameterIn.QUERY, example = "10", description = "Definição do tamanho da lista") Integer size);
 
-    @Operation(summary = "Lista projeto",
-            description = "Endpoint para a listagem detalhada de um projeto.",
+    @Operation(summary = "Lista centro de custo",
+            description = "Endpoint para a listagem detalhada de um centro de custo.",
             responses = {
                     @ApiResponse(responseCode = "500", description = WebUtil.INTERNAL_SERVER_DEFAULT_RESPONSE,
                             content = @Content(schema = @Schema(implementation = ErroDTO.class))),
@@ -48,10 +48,10 @@ public interface ProjetoControllerOpenApi {
                             content = @Content(schema = @Schema(implementation = ErroDTO.class))),
                     @ApiResponse(responseCode = "200")
             })
-    ResponseEntity<ProjetoDTO> getById(@Parameter(required = true, in = ParameterIn.PATH) Long id);
+    ResponseEntity<CentroDeCustoDTO> getById(@Parameter(required = true, in = ParameterIn.PATH) Long id);
 
-    @Operation(summary = "Cadastra projetos",
-            description = "Endpoint para cadastrar novos projetos.",
+    @Operation(summary = "Cadastra centros de custo",
+            description = "Endpoint para cadastrar novos centros de custo.",
             responses = {
                     @ApiResponse(responseCode = "500", description = WebUtil.INTERNAL_SERVER_DEFAULT_RESPONSE,
                             content = @Content(schema = @Schema(implementation = ErroDTO.class))),
@@ -63,10 +63,10 @@ public interface ProjetoControllerOpenApi {
                             content = @Content(schema = @Schema(implementation = ErroDTO.class))),
                     @ApiResponse(responseCode = "201")
     })
-    ResponseEntity<Void> post(@Parameter(required = true) ProjetoParam projetoParam);
+    ResponseEntity<Void> post(@Parameter(required = true) CentroDeCustoParam centroDeCustoParam);
 
-    @Operation(summary = "Atualiza projetos",
-            description = "Endpoint para atualizar um projeto.",
+    @Operation(summary = "Atualiza centros de custo",
+            description = "Endpoint para atualizar um centro de custo.",
             responses = {
                     @ApiResponse(responseCode = "500", description = WebUtil.INTERNAL_SERVER_DEFAULT_RESPONSE,
                             content = @Content(schema = @Schema(implementation = ErroDTO.class))),
@@ -80,12 +80,12 @@ public interface ProjetoControllerOpenApi {
                             content = @Content(schema = @Schema(implementation = ErroDTO.class))),
                     @ApiResponse(responseCode = "200")
             })
-    ResponseEntity<ProjetoDTO> put(
+    ResponseEntity<CentroDeCustoDTO> put(
             @Parameter(required = true, in = ParameterIn.PATH) Long id,
-            @Parameter(required = true) ProjetoParam projetoParam);
+            @Parameter(required = true) CentroDeCustoParam centroDeCustoParam);
 
-    @Operation(summary = "Exclui projetos",
-            description = "Endpoint para excluir um projeto.",
+    @Operation(summary = "Exclui centros de custo",
+            description = "Endpoint para excluir um centro de custo.",
             responses = {
                     @ApiResponse(responseCode = "500", description = WebUtil.INTERNAL_SERVER_DEFAULT_RESPONSE,
                             content = @Content(schema = @Schema(implementation = ErroDTO.class))),

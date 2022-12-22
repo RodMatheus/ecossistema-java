@@ -24,17 +24,8 @@ public class ClassificacaoOrcamentaria implements Serializable {
     @NotBlank
     private String nome;
 
-    @NotBlank
-    private String descricao;
-
     @NotNull
-    private boolean sintetico;
-
-    @NotNull
-    private boolean receita;
-
-    @NotNull
-    private boolean permanente;
+    private boolean despesas;
 
     @NotNull
     private boolean removido;

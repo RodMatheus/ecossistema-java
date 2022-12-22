@@ -51,7 +51,7 @@ public interface DepartamentoControllerOpenApi {
     ResponseEntity<DepartamentoDTO> getById(@Parameter(required = true, in = ParameterIn.PATH) Long id);
 
     @Operation(summary = "Cadastra departamentos",
-            description = "Endpoint para cadastrar novos de departamentos.",
+            description = "Endpoint para cadastrar novos departamentos.",
             responses = {
                     @ApiResponse(responseCode = "500", description = WebUtil.INTERNAL_SERVER_DEFAULT_RESPONSE,
                             content = @Content(schema = @Schema(implementation = ErroDTO.class))),
@@ -85,7 +85,7 @@ public interface DepartamentoControllerOpenApi {
             @Parameter(required = true) DepartamentoParam departamentoParam);
 
     @Operation(summary = "Exclui departamentos",
-            description = "Endpoint para excluir departamentos.",
+            description = "Endpoint para excluir um departamento.",
             responses = {
                     @ApiResponse(responseCode = "500", description = WebUtil.INTERNAL_SERVER_DEFAULT_RESPONSE,
                             content = @Content(schema = @Schema(implementation = ErroDTO.class))),

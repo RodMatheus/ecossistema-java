@@ -100,7 +100,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
             ValidacaoException ex, WebRequest request) {
         log.info(ex.getMessage(), ex);
         return ResponseEntity
-                .status(HttpStatus.NOT_FOUND)
+                .status(HttpStatus.BAD_REQUEST)
                 .body(geraErro(ex.getMessage()));
     }
 

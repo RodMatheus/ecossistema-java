@@ -33,7 +33,7 @@ public class CentroDeCustoRepositoryImpl implements CentroDeCustoRepositoryCusto
         criteria.select(builder.count(root));
         
         List<Predicate> predicates = aplicaFiltros(filtros, root, builder);
-        criteria.where(predicates.toArray(new Predicate[predicates.size()]));
+        criteria.where(predicates.toArray(new Predicate[0]));
         return manager.createQuery(criteria).getSingleResult();
     }
 
@@ -46,7 +46,7 @@ public class CentroDeCustoRepositoryImpl implements CentroDeCustoRepositoryCusto
         criteria.orderBy(builder.asc(root.get(CentroDeCusto_.NOME)));
 
         List<Predicate> predicates = aplicaFiltros(filtros, root, builder);
-        criteria.where(predicates.toArray(new Predicate[]{}));
+        criteria.where(predicates.toArray(new Predicate[0]));
 
         return manager.createQuery(criteria)
                 .setFirstResult((paginacao.getPageNumber() - 1) * paginacao.getPageSize())

@@ -41,7 +41,8 @@ public class ProjetoController implements ProjetoControllerOpenApi {
     @GetMapping
     @CheckSecurity.comum.all
     public ResponseEntity<List<ProjetoDTO>> get(FiltroProjeto filtros,
-                                                @RequestParam Integer page, @RequestParam Integer size) {
+                                                @RequestParam(defaultValue = WebUtil.PAGE_DEFAULT) Integer page,
+                                                @RequestParam(defaultValue = WebUtil.SIZE_DEFAULT) Integer size) {
         log.info("LISTAGEM DE PROJETOS");
         List<ProjetoDTO> projetosDTO = List.of();
 

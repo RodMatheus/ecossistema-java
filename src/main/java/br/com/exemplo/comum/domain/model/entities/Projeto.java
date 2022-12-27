@@ -43,7 +43,7 @@ public class Projeto implements Serializable {
         projeto.setRemovido(Boolean.TRUE);
     }
 
-    public static void ofAlteracao(Projeto projeto, ProjetoParam projetoParam) {
+    public static void ofAlteracao(Projeto projeto, final ProjetoParam projetoParam) {
         projeto.setNome(projetoParam.nome());
     }
     @Override

@@ -42,7 +42,7 @@ public class Departamento implements Serializable {
         departamento.setRemovido(Boolean.TRUE);
     }
 
-    public static void ofAlteracao(Departamento departamento, DepartamentoParam departamentoParam) {
+    public static void ofAlteracao(Departamento departamento, final DepartamentoParam departamentoParam) {
         departamento.setNome(departamentoParam.nome());
     }
 

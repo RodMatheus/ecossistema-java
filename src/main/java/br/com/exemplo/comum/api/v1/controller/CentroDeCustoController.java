@@ -41,7 +41,8 @@ public class CentroDeCustoController implements CentroDeCustoControllerOpenApi {
     @GetMapping
     @CheckSecurity.comum.all
     public ResponseEntity<List<CentroDeCustoDTO>> get(FiltroCentroDeCusto filtros,
-                                                @RequestParam Integer page, @RequestParam Integer size) {
+                                                      @RequestParam(defaultValue = WebUtil.PAGE_DEFAULT) Integer page,
+                                                      @RequestParam(defaultValue = WebUtil.SIZE_DEFAULT) Integer size) {
         log.info("LISTAGEM DE CENTROS DE CUSTO");
         List<CentroDeCustoDTO> centrosDeCustoDTO = List.of();
 

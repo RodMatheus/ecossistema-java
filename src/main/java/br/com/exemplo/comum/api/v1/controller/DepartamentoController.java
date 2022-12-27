@@ -40,7 +40,8 @@ public class DepartamentoController implements DepartamentoControllerOpenApi {
     @GetMapping
     @CheckSecurity.comum.all
     public ResponseEntity<List<DepartamentoDTO>> get(FiltroDepartamento filtros,
-           @RequestParam Integer page, @RequestParam Integer size) {
+                                                     @RequestParam(defaultValue = WebUtil.PAGE_DEFAULT) Integer page,
+                                                     @RequestParam(defaultValue = WebUtil.SIZE_DEFAULT) Integer size) {
         log.info("LISTAGEM DE DEPARTAMENTOS");
         List<DepartamentoDTO> departamentosDTO = List.of();
 

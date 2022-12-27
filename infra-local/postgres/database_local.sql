@@ -9,3 +9,6 @@ INSERT INTO comum.departamento(nome, removido) values ('Administrativo', false);
 INSERT INTO comum.departamento(nome, removido) values ('Jurídico', false);
 INSERT INTO comum.departamento(nome, removido) values ('TI', false);
 INSERT INTO comum.departamento(nome, removido) values ('Comercial', false);
+
+-- BANCOS
+INSERT INTO comum.banco(codigo, nome, removido) values ('001', 'Banco do Brasil S.A', false);

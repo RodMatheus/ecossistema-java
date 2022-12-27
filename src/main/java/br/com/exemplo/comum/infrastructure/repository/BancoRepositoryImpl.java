@@ -1,9 +1,9 @@
 package br.com.exemplo.comum.infrastructure.repository;
 
-import br.com.exemplo.comum.api.v1.filter.FiltroProjeto;
-import br.com.exemplo.comum.domain.model.entities.Projeto;
-import br.com.exemplo.comum.domain.model.entities.Projeto_;
-import br.com.exemplo.comum.domain.repository.ProjetoRepositoryCustom;
+import br.com.exemplo.comum.api.v1.filter.FiltroBanco;
+import br.com.exemplo.comum.domain.model.entities.Banco;
+import br.com.exemplo.comum.domain.model.entities.Banco_;
+import br.com.exemplo.comum.domain.repository.BancoRepositoryCustom;
 import br.com.exemplo.comum.infrastructure.util.Utilitarios;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -19,17 +19,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public class ProjetoRepositoryImpl implements ProjetoRepositoryCustom {
+public class BancoRepositoryImpl implements BancoRepositoryCustom {
 
     @PersistenceContext
     private EntityManager manager;
 
     @Override
-    public Long contaPorFiltros(FiltroProjeto filtros) {
+    public Long contaPorFiltros(FiltroBanco filtros) {
         CriteriaBuilder builder = manager.getCriteriaBuilder();
         CriteriaQuery<Long> criteria = builder.createQuery(Long.class);
         
-        Root<Projeto> root = criteria.from(Projeto.class);
+        Root<Banco> root = criteria.from(Banco.class);
         criteria.select(builder.count(root));
         
         List<Predicate> predicates = aplicaFiltros(filtros, root, builder);
@@ -38,12 +38,12 @@ public class ProjetoRepositoryImpl implements ProjetoRepositoryCustom {
     }
 
     @Override
-    public List<Projeto> pesquisaPorFiltros(FiltroProjeto filtros, Pageable paginacao) {
+    public List<Banco> pesquisaPorFiltros(FiltroBanco filtros, Pageable paginacao) {
         CriteriaBuilder builder = manager.getCriteriaBuilder();
-        CriteriaQuery<Projeto> criteria = builder.createQuery(Projeto.class);
-        Root<Projeto> root = criteria.from(Projeto.class);
+        CriteriaQuery<Banco> criteria = builder.createQuery(Banco.class);
+        Root<Banco> root = criteria.from(Banco.class);
 
-        criteria.orderBy(builder.asc(root.get(Projeto_.NOME)));
+        criteria.orderBy(builder.asc(root.get(Banco_.codigo)));
 
         List<Predicate> predicates = aplicaFiltros(filtros, root, builder);
         criteria.where(predicates.toArray(new Predicate[0]));
@@ -54,14 +54,19 @@ public class ProjetoRepositoryImpl implements ProjetoRepositoryCustom {
                 .getResultList();
     }
 
-    private List<Predicate> aplicaFiltros(FiltroProjeto filtros, Root<Projeto> root, CriteriaBuilder builder) {
+    private List<Predicate> aplicaFiltros(FiltroBanco filtros, Root<Banco> root, CriteriaBuilder builder) {
         ArrayList<Predicate> predicates = new ArrayList<>();
 
-        predicates.add(builder.isFalse(root.get(Projeto_.REMOVIDO)));
+        predicates.add(builder.isFalse(root.get(Banco_.REMOVIDO)));
 
         if(!StringUtils.isEmpty(filtros.nome())) {
             predicates.add(
-                    builder.like(root.get(Projeto_.NOME), Utilitarios.likeFunction(filtros.nome())));
+                    builder.like(root.get(Banco_.NOME), Utilitarios.likeFunction(filtros.nome())));
+        }
+
+        if(!StringUtils.isEmpty(filtros.codigo())) {
+            predicates.add(
+                    builder.like(root.get(Banco_.CODIGO), filtros.codigo()));
         }
         return predicates;
     }

@@ -13,4 +13,7 @@ public abstract class WebUtil {
     public static final String BAD_REQUEST_DEFAULT_RESPONSE = "Lista de erros de validação";
 
     public static final String X_TOTAL_COUNT_HEADER = "X_TOTAL_COUNT";
+
+    public static final String PAGE_DEFAULT = "1";
+    public static final String SIZE_DEFAULT = "10";
 }

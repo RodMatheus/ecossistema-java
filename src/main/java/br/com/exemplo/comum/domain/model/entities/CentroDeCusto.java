@@ -34,7 +34,7 @@ public class CentroDeCusto implements Serializable {
         centroDeCusto.setRemovido(Boolean.TRUE);
     }
 
-    public static void ofAlteracao(CentroDeCusto centroDeCusto, CentroDeCustoParam centroDeCustoParam) {
+    public static void ofAlteracao(CentroDeCusto centroDeCusto, final CentroDeCustoParam centroDeCustoParam) {
         centroDeCusto.setNome(centroDeCustoParam.nome());
     }
 

@@ -14,6 +14,7 @@ import jakarta.persistence.criteria.Root;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +34,10 @@ public class BancoRepositoryImpl implements BancoRepositoryCustom {
         criteria.select(builder.count(root));
         
         List<Predicate> predicates = aplicaFiltros(filtros, root, builder);
-        criteria.where(predicates.toArray(new Predicate[0]));
+        if(!CollectionUtils.isEmpty(predicates)) {
+            criteria.where(predicates.toArray(new Predicate[0]));
+        }
+
         return manager.createQuery(criteria).getSingleResult();
     }
 
@@ -46,7 +50,9 @@ public class BancoRepositoryImpl implements BancoRepositoryCustom {
         criteria.orderBy(builder.asc(root.get(Banco_.codigo)));
 
         List<Predicate> predicates = aplicaFiltros(filtros, root, builder);
-        criteria.where(predicates.toArray(new Predicate[0]));
+        if(!CollectionUtils.isEmpty(predicates)) {
+            criteria.where(predicates.toArray(new Predicate[0]));
+        }
 
         return manager.createQuery(criteria)
                 .setFirstResult((paginacao.getPageNumber() - 1) * paginacao.getPageSize())
@@ -57,8 +63,6 @@ public class BancoRepositoryImpl implements BancoRepositoryCustom {
     private List<Predicate> aplicaFiltros(FiltroBanco filtros, Root<Banco> root, CriteriaBuilder builder) {
         ArrayList<Predicate> predicates = new ArrayList<>();
 
-        predicates.add(builder.isFalse(root.get(Banco_.REMOVIDO)));
-
         if(!StringUtils.isEmpty(filtros.nome())) {
             predicates.add(
                     builder.like(root.get(Banco_.NOME), Utilitarios.likeFunction(filtros.nome())));
@@ -68,6 +72,12 @@ public class BancoRepositoryImpl implements BancoRepositoryCustom {
             predicates.add(
                     builder.like(root.get(Banco_.CODIGO), filtros.codigo()));
         }
+
+        if(filtros.ativo() != null) {
+            predicates.add(
+                    builder.equal(root.get(Banco_.ATIVO), filtros.ativo()));
+        }
+
         return predicates;
     }
 }

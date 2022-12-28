@@ -14,6 +14,7 @@ import jakarta.persistence.criteria.Root;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +34,10 @@ public class ProjetoRepositoryImpl implements ProjetoRepositoryCustom {
         criteria.select(builder.count(root));
         
         List<Predicate> predicates = aplicaFiltros(filtros, root, builder);
-        criteria.where(predicates.toArray(new Predicate[0]));
+        if(!CollectionUtils.isEmpty(predicates)) {
+            criteria.where(predicates.toArray(new Predicate[0]));
+        }
+
         return manager.createQuery(criteria).getSingleResult();
     }
 
@@ -46,7 +50,9 @@ public class ProjetoRepositoryImpl implements ProjetoRepositoryCustom {
         criteria.orderBy(builder.asc(root.get(Projeto_.NOME)));
 
         List<Predicate> predicates = aplicaFiltros(filtros, root, builder);
-        criteria.where(predicates.toArray(new Predicate[0]));
+        if(!CollectionUtils.isEmpty(predicates)) {
+            criteria.where(predicates.toArray(new Predicate[0]));
+        }
 
         return manager.createQuery(criteria)
                 .setFirstResult((paginacao.getPageNumber() - 1) * paginacao.getPageSize())
@@ -57,12 +63,16 @@ public class ProjetoRepositoryImpl implements ProjetoRepositoryCustom {
     private List<Predicate> aplicaFiltros(FiltroProjeto filtros, Root<Projeto> root, CriteriaBuilder builder) {
         ArrayList<Predicate> predicates = new ArrayList<>();
 
-        predicates.add(builder.isFalse(root.get(Projeto_.REMOVIDO)));
-
         if(!StringUtils.isEmpty(filtros.nome())) {
             predicates.add(
                     builder.like(root.get(Projeto_.NOME), Utilitarios.likeFunction(filtros.nome())));
         }
+
+        if(filtros.ativo() != null) {
+            predicates.add(
+                    builder.equal(root.get(Projeto_.ATIVO), filtros.ativo()));
+        }
+
         return predicates;
     }
 }

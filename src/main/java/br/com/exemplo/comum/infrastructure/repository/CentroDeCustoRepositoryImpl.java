@@ -14,6 +14,7 @@ import jakarta.persistence.criteria.Root;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +34,10 @@ public class CentroDeCustoRepositoryImpl implements CentroDeCustoRepositoryCusto
         criteria.select(builder.count(root));
         
         List<Predicate> predicates = aplicaFiltros(filtros, root, builder);
-        criteria.where(predicates.toArray(new Predicate[0]));
+        if(!CollectionUtils.isEmpty(predicates)) {
+            criteria.where(predicates.toArray(new Predicate[0]));
+        }
+
         return manager.createQuery(criteria).getSingleResult();
     }
 
@@ -46,7 +50,9 @@ public class CentroDeCustoRepositoryImpl implements CentroDeCustoRepositoryCusto
         criteria.orderBy(builder.asc(root.get(CentroDeCusto_.NOME)));
 
         List<Predicate> predicates = aplicaFiltros(filtros, root, builder);
-        criteria.where(predicates.toArray(new Predicate[0]));
+        if(!CollectionUtils.isEmpty(predicates)) {
+            criteria.where(predicates.toArray(new Predicate[0]));
+        }
 
         return manager.createQuery(criteria)
                 .setFirstResult((paginacao.getPageNumber() - 1) * paginacao.getPageSize())
@@ -57,12 +63,16 @@ public class CentroDeCustoRepositoryImpl implements CentroDeCustoRepositoryCusto
     private List<Predicate> aplicaFiltros(FiltroCentroDeCusto filtros, Root<CentroDeCusto> root, CriteriaBuilder builder) {
         List<Predicate> predicates = new ArrayList<>();
 
-        predicates.add(builder.isFalse(root.get(CentroDeCusto_.REMOVIDO)));
-
         if(!StringUtils.isEmpty(filtros.nome())) {
             predicates.add(
                     builder.like(root.get(CentroDeCusto_.NOME), Utilitarios.likeFunction(filtros.nome())));
         }
+
+        if(filtros.ativo() != null) {
+            predicates.add(
+                    builder.equal(root.get(CentroDeCusto_.ATIVO), filtros.ativo()));
+        }
+
         return predicates;
     }
 }

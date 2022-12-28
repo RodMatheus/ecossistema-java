@@ -10,7 +10,9 @@ import br.com.exemplo.comum.domain.repository.PlanoDeContasRepository;
 import br.com.exemplo.comum.infrastructure.util.MensagemUtil;
 import br.com.exemplo.comum.infrastructure.util.SecurityUtil;
 import br.com.exemplo.comum.infrastructure.util.Utilitarios;
+import jakarta.persistence.LockModeType;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -52,23 +54,7 @@ public class PlanoDeContasService {
     }
 
     @Transactional
-    public void removePlanoDeContas(final Long id) {
-        log.info("Verificando a existência do plano de contas. ID: {}.", id);
-        PlanoDeContas planoDeContas = this.existePlano(id);
-
-        log.info("Verificando a existência de filhos no plano de contas.");
-        this.existemFilhos(id);
-
-        log.info("Alterando status de removido da entidade.");
-        PlanoDeContas.ofExclusao(planoDeContas);
-
-        log.info("Gerando log de transação.");
-        LogAuditoria logAuditoria = LogAuditoria.ofExclusao(SecurityUtil.getUsuarioLogado(),
-                Utilitarios.convertEntityLog(planoDeContas), PlanoDeContas.class);
-        logAuditoriaRepository.save(logAuditoria);
-    }
-
-    @Transactional
+    @Lock(LockModeType.PESSIMISTIC_READ)
     public PlanoDeContas atualizaPlanoDeContas(final PlanoDeContasParam planoDeContasParam, final Long id) {
         log.info("Verificando a existência do plano de contas. ID: {}.", id);
         PlanoDeContas planoDeContas = this.existePlano(id);
@@ -87,6 +73,24 @@ public class PlanoDeContasService {
                 Utilitarios.convertEntityLog(planoDeContas), PlanoDeContas.class);
         logAuditoriaRepository.save(logAuditoria);
         return planoDeContas;
+    }
+
+    @Transactional
+    @Lock(LockModeType.PESSIMISTIC_READ)
+    public void removePlanoDeContas(final Long id) {
+        log.info("Verificando a existência do plano de contas. ID: {}.", id);
+        PlanoDeContas planoDeContas = this.existePlano(id);
+
+        log.info("Verificando a existência de filhos no plano de contas.");
+        this.existemFilhos(id);
+
+        log.info("Alterando status de removido da entidade.");
+        PlanoDeContas.ofExclusao(planoDeContas);
+
+        log.info("Gerando log de transação.");
+        LogAuditoria logAuditoria = LogAuditoria.ofExclusao(SecurityUtil.getUsuarioLogado(),
+                Utilitarios.convertEntityLog(planoDeContas), PlanoDeContas.class);
+        logAuditoriaRepository.save(logAuditoria);
     }
 
     public PlanoDeContas pesquisaPlanoDeContasPorId(final Long id) {

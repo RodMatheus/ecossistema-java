@@ -3,5 +3,5 @@ package br.com.exemplo.comum.api.v1.model.dto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public record ProjetoDTO(Long id, String nome, Boolean removido) {
+public record ProjetoDTO(Long id, String nome, Boolean ativo) {
 }

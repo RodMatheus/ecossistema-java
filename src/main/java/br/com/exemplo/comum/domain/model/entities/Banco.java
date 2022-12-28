@@ -10,12 +10,15 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Where;
+
 import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
 @Getter
 @Setter(AccessLevel.PRIVATE)
+@Where(clause = "removido = false")
 public class Banco implements Serializable {
 
     public static final long serialVersionUID = 1L;
@@ -30,20 +33,21 @@ public class Banco implements Serializable {
     @NotBlank
     private String codigo;
 
+
+    @NotNull
+    private boolean ativo;
+
     @NotNull
     private boolean removido;
 
-    public static Banco of (final String codigo, final String nome) {
+    public static Banco of(final String codigo, final String nome) {
         Banco banco = new Banco();
         banco.setCodigo(codigo);
         banco.setNome(nome);
+        banco.setAtivo(Boolean.TRUE);
         banco.setRemovido(Boolean.FALSE);
 
         return banco;
-    }
-
-    public static void ofExclusao(Banco banco) {
-        banco.setRemovido(Boolean.TRUE);
     }
 
     public static void ofAlteracao(Banco banco, final BancoParam bancoParam) {
@@ -51,17 +55,26 @@ public class Banco implements Serializable {
         banco.setNome(bancoParam.nome());
     }
 
+    public static void ofExclusao(Banco banco) {
+        banco.setAtivo(Boolean.FALSE);
+        banco.setRemovido(Boolean.TRUE);
+    }
+
+    public static void ofAtivo(Banco banco, final Boolean situacao) {
+        banco.setAtivo(situacao);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Banco banco = (Banco) o;
-        return removido == banco.removido && id.equals(banco.id) && nome.equals(banco.nome) && codigo.equals(banco.codigo);
+        return ativo == banco.ativo && removido == banco.removido && id.equals(banco.id) && nome.equals(banco.nome) && codigo.equals(banco.codigo);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, nome, codigo, removido);
+        return Objects.hash(id, nome, codigo, ativo, removido);
     }
 
     @Override
@@ -70,6 +83,7 @@ public class Banco implements Serializable {
                 "id=" + id +
                 ", nome='" + nome + '\'' +
                 ", codigo='" + codigo + '\'' +
+                ", ativo=" + ativo +
                 ", removido=" + removido +
                 '}';
     }

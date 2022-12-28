@@ -17,6 +17,7 @@ import java.util.Objects;
 @Entity
 @Getter
 @Setter(AccessLevel.PRIVATE)
+@Where(clause = "removido = false")
 public class PlanoDeContas implements Serializable {
 
     public static final long serialVersionUID = 1L;
@@ -32,6 +33,9 @@ public class PlanoDeContas implements Serializable {
     private boolean despesa;
 
     @NotNull
+    private boolean ativo;
+
+    @NotNull
     private boolean removido;
 
     @JsonIgnore
@@ -39,11 +43,9 @@ public class PlanoDeContas implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     private PlanoDeContas pai;
 
-
     @JsonIgnore
     @JoinColumn(name = "pai")
     @OneToMany(fetch = FetchType.LAZY)
-    @Where(clause = "removido = false")
     private List<PlanoDeContas> filhos;
 
     public static PlanoDeContas of(final PlanoDeContas pai, final String nome, final Boolean despesa) {
@@ -51,6 +53,7 @@ public class PlanoDeContas implements Serializable {
         plano.setNome(nome);
         plano.setDespesa(despesa);
         plano.setPai(pai);
+        plano.setAtivo(Boolean.TRUE);
         plano.setRemovido(Boolean.FALSE);
 
         return plano;
@@ -63,7 +66,12 @@ public class PlanoDeContas implements Serializable {
         planoDeContas.setPai(pai);
     }
     public static void ofExclusao(PlanoDeContas planoDeContas) {
+        planoDeContas.setAtivo(Boolean.FALSE);
         planoDeContas.setRemovido(Boolean.TRUE);
+    }
+
+    public static void ofAtivo(PlanoDeContas planoDeContas, final Boolean situacao){
+        planoDeContas.setAtivo(situacao);
     }
 
     @Override
@@ -71,20 +79,20 @@ public class PlanoDeContas implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PlanoDeContas that = (PlanoDeContas) o;
-        return despesa == that.despesa && removido == that.removido && id.equals(that.id) && nome.equals(that.nome) && Objects.equals(pai, that.pai);
+        return despesa == that.despesa && ativo == that.ativo && removido == that.removido && id.equals(that.id) && nome.equals(that.nome) && Objects.equals(pai, that.pai);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, nome, despesa, removido, pai);
+        return Objects.hash(id, nome, despesa, ativo, removido, pai);
     }
-
     @Override
     public String toString() {
         return "PlanoDeContas{" +
                 "id=" + id +
                 ", nome='" + nome + '\'' +
                 ", despesa=" + despesa +
+                ", ativo=" + ativo +
                 ", removido=" + removido +
                 ", pai=" + pai +
                 '}';

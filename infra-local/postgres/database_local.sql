@@ -12,3 +12,10 @@ INSERT INTO comum.departamento(nome, removido) values ('Comercial', false);
 
 -- BANCOS
 INSERT INTO comum.banco(codigo, nome, removido) values ('001', 'Banco do Brasil S.A', false);
+
+-- PLANOS DE CONTAS
+INSERT INTO comum.plano_de_contas(nome, despesa, pai, removido) values ('Impostos', true, null, false);
+INSERT INTO comum.plano_de_contas(nome, despesa, pai, removido) values ('Federal', true, 1, false);
+INSERT INTO comum.plano_de_contas(nome, despesa, pai, removido) values ('INSS', true, 2, false);
+INSERT INTO comum.plano_de_contas(nome, despesa, pai, removido) values ('Despesas administrativas', true, null, false);
+

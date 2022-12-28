@@ -65,7 +65,7 @@ public class PlanoDeContasService {
         log.info("Verifica a existência do plano de contas na base com os novos dados.");
         this.validaAtualizacao(planoDeContasParam.nome(), planoDeContasParam.despesa(), pai, id);
 
-        log.info("Atualizando entidade de Banco.");
+        log.info("Atualizando entidade de plano de contas.");
         PlanoDeContas.ofAlteracao(planoDeContas, planoDeContasParam, pai);
 
         log.info("Gerando log de transação.");
@@ -94,10 +94,10 @@ public class PlanoDeContasService {
     }
 
     public PlanoDeContas pesquisaPlanoDeContasPorId(final Long id) {
-        log.info("Verificando a existência do banco. ID: {}.", id);
+        log.info("Verificando a existência do plano de contas. ID: {}.", id);
         return planoDeContasRepository.findById(id)
                 .orElseThrow(() -> new RecursoNaoEncontradoException(
-                        mensagemUtil.mensagemPersonalizada("erro.banco-nao-encontrado")));
+                        mensagemUtil.mensagemPersonalizada("erro.plano-de-contas-nao-encontrado")));
     }
 
     private void validaCadastro(final String nome, final Boolean despesa, final PlanoDeContas pai) {

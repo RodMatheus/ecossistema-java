@@ -26,7 +26,7 @@ import java.util.List;
         produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 public class PlanoDeContasController implements PlanoDeContasControllerOpenApi {
 
-private final PlanoDeContasService planoDeContasService;
+    private final PlanoDeContasService planoDeContasService;
     private final PlanoDeContasRepository planoDeContasRepository;
     private final PlanoDeContasMapper planoDeContasMapper;
 

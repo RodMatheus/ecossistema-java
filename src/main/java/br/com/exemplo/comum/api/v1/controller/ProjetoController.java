@@ -51,10 +51,9 @@ public class ProjetoController implements ProjetoControllerOpenApi {
 
         if(total > 0) {
             log.info("Pesquisando projetos.");
-            final List<Projeto> projetos = projetoRepository
-                    .pesquisaPorFiltros(filtros, PageRequest.of(page, size));
+            final List<Projeto> projetos = projetoRepository.pesquisaPorFiltros(filtros, PageRequest.of(page, size));
 
-            log.info("Convertendo entidades de Projeto em DTO. PROJETOS: {}.", projetos);
+            log.info("Convertendo entidades de Projeto em DTO.");
             projetosDTO = projetoMapper.toResourceList(projetos);
         }
 
@@ -70,13 +69,13 @@ public class ProjetoController implements ProjetoControllerOpenApi {
     public ResponseEntity<ProjetoDTO> getById(@PathVariable Long id) {
         log.info("LISTAGEM DE PROJETO POR ID");
 
-        log.info("Iniciando processo de busca por ID. ID: {}.", id);
+        log.info("Iniciando processo de busca por ID.");
         final Projeto projeto = projetoService.pesquisaProjetoPorId(id);
 
-        log.info("Convertendo entidade de Projeto em DTO. PROJETO: {}.", projeto);
+        log.info("Convertendo entidade de Projeto em DTO.");
         final ProjetoDTO projetoDTO = projetoMapper.toResource(projeto);
 
-        log.info("Retornando resposta da operação.");
+        log.info("Retornando resposta da operação. dto: {}.", projetoDTO);
         return ResponseEntity.ok(projetoDTO);
     }
 
@@ -102,10 +101,10 @@ public class ProjetoController implements ProjetoControllerOpenApi {
         log.info("Iniciando processo de atualização do projeto. PROJETO: {}.", projetoParam);
         final Projeto projeto = projetoService.atualizaProjeto(projetoParam, id);
 
-        log.info("Convertendo entidade de Projeto em DTO. PROJETO: {}.", projeto);
+        log.info("Convertendo entidade de Projeto em DTO.");
         final ProjetoDTO projetoDTO = projetoMapper.toResource(projeto);
 
-        log.info("Retornando resposta da operação.");
+        log.info("Retornando resposta da operação. DTO: {}.", projetoDTO);
         return ResponseEntity.ok(projetoDTO);
     }
 

@@ -9,7 +9,6 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.criteria.*;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
 
@@ -39,11 +38,11 @@ public class PlanoDeContasRepositoryImpl implements PlanoDeContasRepositoryCusto
     }
 
     @Override
-    public List<PlanoDeContas> pesquisaPorFiltros(FiltroPlanoDeContas filtros, Pageable paginacao) {
+    public List<PlanoDeContas> pesquisaPorFiltros(FiltroPlanoDeContas filtros) {
         CriteriaBuilder builder = manager.getCriteriaBuilder();
         CriteriaQuery<PlanoDeContas> criteria = builder.createQuery(PlanoDeContas.class);
-        Root<PlanoDeContas> root = criteria.from(PlanoDeContas.class);
 
+        Root<PlanoDeContas> root = criteria.from(PlanoDeContas.class);
         criteria.orderBy(builder.asc(root.get(PlanoDeContas_.ID)));
 
         List<Predicate> predicates = aplicaFiltros(filtros, root, builder);
@@ -51,31 +50,21 @@ public class PlanoDeContasRepositoryImpl implements PlanoDeContasRepositoryCusto
             criteria.where(predicates.toArray(new Predicate[0]));
         }
 
-        return manager.createQuery(criteria)
-                .setFirstResult((paginacao.getPageNumber() - 1) * paginacao.getPageSize())
-                .setMaxResults(paginacao.getPageSize())
-                .getResultList();
+        return manager.createQuery(criteria).getResultList();
     }
 
     private List<Predicate> aplicaFiltros(FiltroPlanoDeContas filtros, Root<PlanoDeContas> root, CriteriaBuilder builder) {
         ArrayList<Predicate> predicates = new ArrayList<>();
+        predicates.add(builder.isNull(root.get(PlanoDeContas_.PAI)));
 
         if(!StringUtils.isEmpty(filtros.nome())) {
             predicates.add(
                     builder.like(root.get(PlanoDeContas_.NOME), Utilitarios.likeFunction(filtros.nome())));
         }
 
-        if(filtros.despesas() != null) {
+        if(filtros.despesa() != null) {
             predicates.add(
-                    builder.equal(root.get(PlanoDeContas_.DESPESA), filtros.despesas()));
-        }
-
-        if(filtros.pai() != null) {
-            Join<PlanoDeContas, PlanoDeContas> joinPai = root.join(PlanoDeContas_.PAI);
-            predicates.add(
-                    builder.equal(joinPai.get(PlanoDeContas_.ID), filtros.pai()));
-        } else {
-            predicates.add(builder.isNull(root.get(PlanoDeContas_.PAI)));
+                    builder.equal(root.get(PlanoDeContas_.DESPESA), filtros.despesa()));
         }
 
         if(filtros.ativo() != null) {

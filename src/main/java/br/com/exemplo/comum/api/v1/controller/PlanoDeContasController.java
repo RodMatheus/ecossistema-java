@@ -12,7 +12,6 @@ import br.com.exemplo.comum.domain.service.PlanoDeContasService;
 import br.com.exemplo.comum.infrastructure.util.WebUtil;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -40,9 +39,7 @@ public class PlanoDeContasController implements PlanoDeContasControllerOpenApi {
 
     @GetMapping
     @CheckSecurity.comum.all
-    public ResponseEntity<List<PlanoDeContasDTO>> get(FiltroPlanoDeContas filtros,
-                                                      @RequestParam(defaultValue = WebUtil.PAGE_DEFAULT) Integer page,
-                                                      @RequestParam(defaultValue = WebUtil.SIZE_DEFAULT) Integer size) {
+    public ResponseEntity<List<PlanoDeContasDTO>> get(FiltroPlanoDeContas filtros) {
         log.info("LISTAGEM DE PLANOS DE CONTAS");
         List<PlanoDeContasDTO> planosDeContasDTO = List.of();
 
@@ -51,7 +48,7 @@ public class PlanoDeContasController implements PlanoDeContasControllerOpenApi {
 
         if(total > 0) {
             log.info("Pesquisando planos de contas.");
-            final List<PlanoDeContas> planosDeContas = planoDeContasRepository.pesquisaPorFiltros(filtros, PageRequest.of(page, size));
+            final List<PlanoDeContas> planosDeContas = planoDeContasRepository.pesquisaPorFiltros(filtros);
 
             log.info("Convertendo entidades de Planos de contas em DTO.");
             planosDeContasDTO = planoDeContasMapper.toResourceList(planosDeContas);
@@ -69,13 +66,13 @@ public class PlanoDeContasController implements PlanoDeContasControllerOpenApi {
     public ResponseEntity<PlanoDeContasDTO> getById(@PathVariable Long id) {
         log.info("LISTAGEM DE PLANO DE CONTAS POR ID");
 
-        log.info("Iniciando processo de busca por ID. ID: {}.", id);
+        log.info("Iniciando processo de busca por ID.");
         final PlanoDeContas planoDeContas = planoDeContasService.pesquisaPlanoDeContasPorId(id);
 
-        log.info("Convertendo entidade de plano de contas em DTO. PLANO DE CONTAS: {}.", planoDeContas);
+        log.info("Convertendo entidade de plano de contas em DTO.");
         final PlanoDeContasDTO planoDeContasDTO = planoDeContasMapper.toResource(planoDeContas);
 
-        log.info("Retornando resposta da operação.");
+        log.info("Retornando resposta da operação. DTO: {}.", planoDeContasDTO);
         return ResponseEntity.ok(planoDeContasDTO);
     }
 
@@ -102,11 +99,11 @@ public class PlanoDeContasController implements PlanoDeContasControllerOpenApi {
         log.info("Iniciando processo de atualização do plano de conta. PLANO DE CONTAS: {}.", planoDeContasParam);
         final PlanoDeContas planoDeContas = planoDeContasService.atualizaPlanoDeContas(planoDeContasParam, id);
 
-        log.info("Convertendo entidade de plano de contas em DTO. PLANO DE CONTAS: {}.", planoDeContas);
-        final PlanoDeContasDTO planoDeContasDTODTO = planoDeContasMapper.toResource(planoDeContas);
+        log.info("Convertendo entidade de plano de contas em DTO.");
+        final PlanoDeContasDTO planoDeContasDTO = planoDeContasMapper.toResource(planoDeContas);
 
-        log.info("Retornando resposta da operação.");
-        return ResponseEntity.ok(planoDeContasDTODTO);
+        log.info("Retornando resposta da operação. DTO: {}.", planoDeContasDTO);
+        return ResponseEntity.ok(planoDeContasDTO);
     }
 
     @DeleteMapping("/{id}")

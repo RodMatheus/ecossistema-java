@@ -9,7 +9,6 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.criteria.*;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
 
@@ -39,7 +38,7 @@ public class ClassificacaoOrcamentariaRepositoryImpl implements ClassificacaoOrc
     }
 
     @Override
-    public List<ClassificacaoOrcamentaria> pesquisaPorFiltros(FiltroClassificacaoOrcamentaria filtros, Pageable paginacao) {
+    public List<ClassificacaoOrcamentaria> pesquisaPorFiltros(FiltroClassificacaoOrcamentaria filtros) {
         CriteriaBuilder builder = manager.getCriteriaBuilder();
         CriteriaQuery<ClassificacaoOrcamentaria> criteria = builder.createQuery(ClassificacaoOrcamentaria.class);
 
@@ -54,8 +53,7 @@ public class ClassificacaoOrcamentariaRepositoryImpl implements ClassificacaoOrc
         return manager.createQuery(criteria).getResultList();
     }
 
-    private List<Predicate> aplicaFiltros(FiltroClassificacaoOrcamentaria filtros,
-                                          Root<ClassificacaoOrcamentaria> root, CriteriaBuilder builder) {
+    private List<Predicate> aplicaFiltros(FiltroClassificacaoOrcamentaria filtros, Root<ClassificacaoOrcamentaria> root, CriteriaBuilder builder) {
         ArrayList<Predicate> predicates = new ArrayList<>();
         predicates.add(builder.isNull(root.get(ClassificacaoOrcamentaria_.PAI)));
 
@@ -64,9 +62,9 @@ public class ClassificacaoOrcamentariaRepositoryImpl implements ClassificacaoOrc
                     builder.like(root.get(ClassificacaoOrcamentaria_.NOME), Utilitarios.likeFunction(filtros.nome())));
         }
 
-        if(filtros.despesas() != null) {
+        if(filtros.despesa() != null) {
             predicates.add(
-                    builder.equal(root.get(ClassificacaoOrcamentaria_.DESPESA), filtros.despesas()));
+                    builder.equal(root.get(ClassificacaoOrcamentaria_.DESPESA), filtros.despesa()));
         }
 
         if(filtros.ativo() != null) {

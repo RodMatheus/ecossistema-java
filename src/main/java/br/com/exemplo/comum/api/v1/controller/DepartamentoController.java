@@ -50,10 +50,9 @@ public class DepartamentoController implements DepartamentoControllerOpenApi {
 
         if(total > 0) {
             log.info("Pesquisando departamentos.");
-            final List<Departamento> departamentos = departamentoRepository
-                    .pesquisaPorFiltros(filtros, PageRequest.of(page, size));
+            final List<Departamento> departamentos = departamentoRepository.pesquisaPorFiltros(filtros, PageRequest.of(page, size));
 
-            log.info("Convertendo entidades de Departamento em DTO. DEPARTAMENTOS: {}.", departamentos);
+            log.info("Convertendo entidades de Departamento em DTO.");
             departamentosDTO = departamentoMapper.toResourceList(departamentos);
         }
 
@@ -69,13 +68,13 @@ public class DepartamentoController implements DepartamentoControllerOpenApi {
     public ResponseEntity<DepartamentoDTO> getById(@PathVariable Long id) {
         log.info("LISTAGEM DE DEPARTAMENTO POR ID");
 
-        log.info("Iniciando processo de busca por ID. ID: {}.", id);
+        log.info("Iniciando processo de busca por ID.");
         final Departamento departamento = departamentoService.pesquisaDepartamentoPorId(id);
 
-        log.info("Convertendo entidade de Departamento em DTO. DEPARTAMENTO: {}.", departamento);
+        log.info("Convertendo entidade de Departamento em DTO.");
         final DepartamentoDTO departamentoDTO = departamentoMapper.toResource(departamento);
 
-        log.info("Retornando resposta da operação.");
+        log.info("Retornando resposta da operação. DTO: {}.", departamentoDTO);
         return ResponseEntity.ok(departamentoDTO);
     }
 
@@ -101,10 +100,10 @@ public class DepartamentoController implements DepartamentoControllerOpenApi {
         log.info("Iniciando processo de atualização do departamento. DEPARTAMENTO: {}.", departamentoParam);
         final Departamento departamento = departamentoService.atualizaDepartamento(departamentoParam, id);
 
-        log.info("Convertendo entidade de Departamento em DTO. DEPARTAMENTO: {}.", departamento);
+        log.info("Convertendo entidade de Departamento em DTO.");
         final DepartamentoDTO departamentoDTO = departamentoMapper.toResource(departamento);
 
-        log.info("Retornando resposta da operação.");
+        log.info("Retornando resposta da operação. DTO: {}.", departamentoDTO);
         return ResponseEntity.ok(departamentoDTO);
     }
 

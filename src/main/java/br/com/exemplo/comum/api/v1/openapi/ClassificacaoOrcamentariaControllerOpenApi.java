@@ -34,10 +34,7 @@ public interface ClassificacaoOrcamentariaControllerOpenApi {
     })
     ResponseEntity<List<ClassificacaoOrcamentariaDTO>> get(
             @Parameter(in = ParameterIn.QUERY,
-                    description = "Filtros de classificações orçamentárias") FiltroClassificacaoOrcamentaria filtros,
-            @Parameter(in = ParameterIn.QUERY, example = "1", description = "Definição do página") Integer page,
-            @Parameter(in = ParameterIn.QUERY, example = "10",
-                    description = "Definição do tamanho da lista") Integer size);
+                    description = "Filtros de classificações orçamentárias") FiltroClassificacaoOrcamentaria filtros);
 
     @Operation(summary = "Lista classificação orçamentária",
             description = "Endpoint para a listagem detalhada de uma classificação orçamentária.",

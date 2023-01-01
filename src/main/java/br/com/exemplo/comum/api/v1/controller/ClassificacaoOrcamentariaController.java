@@ -12,7 +12,6 @@ import br.com.exemplo.comum.domain.service.ClassificacaoOrcamentariaService;
 import br.com.exemplo.comum.infrastructure.util.WebUtil;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -40,9 +39,7 @@ public class ClassificacaoOrcamentariaController implements ClassificacaoOrcamen
 
     @GetMapping
     @CheckSecurity.comum.all
-    public ResponseEntity<List<ClassificacaoOrcamentariaDTO>> get(FiltroClassificacaoOrcamentaria filtros,
-                                                                  @RequestParam(defaultValue = WebUtil.PAGE_DEFAULT) Integer page,
-                                                                  @RequestParam(defaultValue = WebUtil.SIZE_DEFAULT) Integer size) {
+    public ResponseEntity<List<ClassificacaoOrcamentariaDTO>> get(FiltroClassificacaoOrcamentaria filtros) {
         log.info("LISTAGEM DE CLASSIFICAÇÕES ORÇAMENTÁRIAS");
         List<ClassificacaoOrcamentariaDTO> classificacoesOrcamentariasDTO = List.of();
 
@@ -52,7 +49,7 @@ public class ClassificacaoOrcamentariaController implements ClassificacaoOrcamen
         if(total > 0) {
             log.info("Pesquisando classificações orçamentárias.");
             final List<ClassificacaoOrcamentaria> classificacaoOrcamentarias = classificacaoOrcamentariaRepository
-                    .pesquisaPorFiltros(filtros, PageRequest.of(page, size));
+                    .pesquisaPorFiltros(filtros);
 
             log.info("Convertendo entidades de Planos de contas em DTO.");
             classificacoesOrcamentariasDTO = classificacaoOrcamentariaMapper.toResourceList(classificacaoOrcamentarias);

@@ -33,9 +33,7 @@ public interface PlanoDeContasControllerOpenApi {
                         schema = @Schema(implementation = Integer.class)))
     })
     ResponseEntity<List<PlanoDeContasDTO>> get(
-            @Parameter(in = ParameterIn.QUERY, description = "Filtros de planos de contas") FiltroPlanoDeContas filtros,
-            @Parameter(in = ParameterIn.QUERY, example = "1", description = "Definição do página") Integer page,
-            @Parameter(in = ParameterIn.QUERY, example = "10", description = "Definição do tamanho da lista") Integer size);
+            @Parameter(in = ParameterIn.QUERY, description = "Filtros de planos de contas") FiltroPlanoDeContas filtros);
 
     @Operation(summary = "Lista plano de contas",
             description = "Endpoint para a listagem detalhada de um plano de contas.",

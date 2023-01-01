@@ -34,15 +34,11 @@ public class PlanoDeContasService {
     }
     @Transactional
     public void cadastraPlanoDeContas(final PlanoDeContasParam planoDeContasParam) {
-        log.info("Verificando a existência do pai informado.");
-        final PlanoDeContas pai = (planoDeContasParam.pai() == null) ? null : this.existePai(planoDeContasParam.pai());
-
-        log.info("Verifica a existência do plano de contas na base.");
-        this.validaCadastro(planoDeContasParam.nome(), planoDeContasParam.despesa(), pai);
+        log.info("Iniciando validações e recuperação de pai.");
+        final PlanoDeContas pai = this.validaCadastro(planoDeContasParam);
 
         log.info("Gerando entidade de plano de contas para cadastro.");
-        final PlanoDeContas planoDeContas = PlanoDeContas
-                .of(pai, planoDeContasParam.nome(), planoDeContasParam.despesa());
+        final PlanoDeContas planoDeContas = PlanoDeContas.of(pai, planoDeContasParam.nome(), planoDeContasParam.despesa());
 
         log.info("Cadastrando o plano de contas na base. PLANO DE CONTAS: {}.", planoDeContas);
         planoDeContasRepository.save(planoDeContas);
@@ -59,11 +55,8 @@ public class PlanoDeContasService {
         log.info("Verificando a existência do plano de contas. ID: {}.", id);
         PlanoDeContas planoDeContas = this.existePlano(id);
 
-        log.info("Verificando a existência do pai informado.");
-        final PlanoDeContas pai = this.existePai(planoDeContasParam.pai());
-
-        log.info("Verifica a existência do plano de contas na base com os novos dados.");
-        this.validaAtualizacao(planoDeContasParam.nome(), planoDeContasParam.despesa(), pai, id);
+        log.info("Iniciando validações e recuperação de pai.");
+        final PlanoDeContas pai = this.validaAtualizacao(planoDeContasParam, id);
 
         log.info("Atualizando entidade de plano de contas.");
         PlanoDeContas.ofAlteracao(planoDeContas, planoDeContasParam, pai);
@@ -100,14 +93,49 @@ public class PlanoDeContasService {
                         mensagemUtil.mensagemPersonalizada("erro.plano-de-contas-nao-encontrado")));
     }
 
-    private void validaCadastro(final String nome, final Boolean despesa, final PlanoDeContas pai) {
-        if(planoDeContasRepository.validaParaCadastramento(nome, despesa, pai)) {
-            throw new ValidacaoException(mensagemUtil.mensagemPersonalizada("erro.plano-de-contas-cadastrado"));
+    private PlanoDeContas validaCadastro(final PlanoDeContasParam planoDeContasParam) {
+        PlanoDeContas pai = null;
+        if(planoDeContasParam.pai() == null) {
+            this.validaCadastroPai(planoDeContasParam.nome(), planoDeContasParam.despesa());
+        } else {
+            pai = existePai(planoDeContasParam.pai());
+            this.validaCadastroFilho(planoDeContasParam.nome(), planoDeContasParam.despesa(), pai);
+        }
+
+        return pai;
+    }
+
+    private void validaCadastroPai(final String nome, final Boolean despesa) {
+        if(planoDeContasRepository.validaParaCadastramentoPai(nome, despesa)) {
+            throw new ValidacaoException(mensagemUtil.mensagemPersonalizada("erro.plano-de-contas-pai-cadastrado"));
         }
     }
-    private void validaAtualizacao(final String nome, final Boolean despesa, final PlanoDeContas pai, final Long id) {
-        if(planoDeContasRepository.validaParaAtualizacao(nome, despesa, pai, id)) {
-            throw new ValidacaoException(mensagemUtil.mensagemPersonalizada("erro.plano-de-contas-cadastrado"));
+
+    private void validaCadastroFilho(final String nome, final Boolean despesa, final PlanoDeContas pai) {
+        if(planoDeContasRepository.validaParaCadastramentoFilho(nome, despesa, pai)) {
+            throw new ValidacaoException(mensagemUtil.mensagemPersonalizada("erro.plano-de-contas-filho-cadastrado"));
+        }
+    }
+    private PlanoDeContas validaAtualizacao(final PlanoDeContasParam planoDeContasParam, final Long id) {
+        PlanoDeContas pai = null;
+        if(planoDeContasParam.pai() == null) {
+            this.validaAtualizacaoPai(planoDeContasParam.nome(), planoDeContasParam.despesa(), id);
+        } else {
+            pai = this.existePai(planoDeContasParam.pai());
+            this.validaAtualizacaoFilho(planoDeContasParam.nome(), planoDeContasParam.despesa(), pai, id);
+        }
+
+        return pai;
+    }
+    private void validaAtualizacaoPai(final String nome, final Boolean despesa, final Long id) {
+        if(planoDeContasRepository.validaParaAtualizacaoPai(nome, despesa, id)) {
+            throw new ValidacaoException(mensagemUtil.mensagemPersonalizada("erro.plano-de-contas-pai-cadastrado"));
+        }
+    }
+
+    private void validaAtualizacaoFilho(final String nome, final Boolean despesa, final PlanoDeContas pai, final Long id) {
+        if(planoDeContasRepository.validaParaAtualizacaoFilho(nome, despesa, pai, id)) {
+            throw new ValidacaoException(mensagemUtil.mensagemPersonalizada("erro.plano-de-contas-filho-cadastrado"));
         }
     }
 

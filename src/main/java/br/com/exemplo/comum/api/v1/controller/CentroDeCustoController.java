@@ -54,7 +54,7 @@ public class CentroDeCustoController implements CentroDeCustoControllerOpenApi {
             final List<CentroDeCusto> centrosDeCustos = centroDeCustoRepository
                     .pesquisaPorFiltros(filtros, PageRequest.of(page, size));
 
-            log.info("Convertendo entidades de Centro de custo em DTO. CENTROS DE CUSTO: {}.", centrosDeCustos);
+            log.info("Convertendo entidades de Centro de custo em DTO.");
             centrosDeCustoDTO = centroDeCustoMapper.toResourceList(centrosDeCustos);
         }
 
@@ -70,13 +70,13 @@ public class CentroDeCustoController implements CentroDeCustoControllerOpenApi {
     public ResponseEntity<CentroDeCustoDTO> getById(@PathVariable Long id) {
         log.info("LISTAGEM DE CENTRO DE CUSTO POR ID");
 
-        log.info("Iniciando processo de busca por ID. ID: {}.", id);
+        log.info("Iniciando processo de busca por ID.");
         final CentroDeCusto centroDeCusto = centroDeCustoService.pesquisaCentroDeCustoPorId(id);
 
-        log.info("Convertendo entidade de Centro de custo em DTO. CENTRO DE CUSTO: {}.", centroDeCusto);
+        log.info("Convertendo entidade de Centro de custo em DTO.");
         final CentroDeCustoDTO centroDeCustoDTO = centroDeCustoMapper.toResource(centroDeCusto);
 
-        log.info("Retornando resposta da operação.");
+        log.info("Retornando resposta da operação. DTO: {}.", centroDeCustoDTO);
         return ResponseEntity.ok(centroDeCustoDTO);
     }
 
@@ -102,10 +102,10 @@ public class CentroDeCustoController implements CentroDeCustoControllerOpenApi {
         log.info("Iniciando processo de atualização do centro de custo. CENTRO DE CUSTO: {}.", centroDeCustoParam);
         final CentroDeCusto centroDeCusto = centroDeCustoService.atualizaCentroDeCusto(centroDeCustoParam, id);
 
-        log.info("Convertendo entidade de Centro de custo em DTO. CENTRO DE CUSTO: {}.", centroDeCusto);
+        log.info("Convertendo entidade de Centro de custo em DTO.");
         final CentroDeCustoDTO centroDeCustoDTO = centroDeCustoMapper.toResource(centroDeCusto);
 
-        log.info("Retornando resposta da operação.");
+        log.info("Retornando resposta da operação. DTO: {}.", centroDeCustoDTO);
         return ResponseEntity.ok(centroDeCustoDTO);
     }
 

@@ -11,15 +11,28 @@ public interface ClassificacaoOrcamentariaRepository extends JpaRepository<Class
     @Query("SELECT COUNT(c.id) > 0 FROM ClassificacaoOrcamentaria c " +
             "WHERE c.nome = :nome " +
             "AND c.despesa = :despesa " +
-            "AND c.pai = :pai " +
+            "AND c.pai IS NULL " +
             "AND c.id <> :id")
-    boolean validaParaAtualizacao(String nome, Boolean despesa, ClassificacaoOrcamentaria pai, Long id);
+    boolean validaParaAtualizacaoPai(String nome, Boolean despesa, Long id);
 
     @Query("SELECT COUNT(c.id) > 0 FROM ClassificacaoOrcamentaria c " +
             "WHERE c.nome = :nome " +
             "AND c.despesa = :despesa " +
-            "AND c.pai = :pai")
-    boolean validaParaCadastramento(String nome, Boolean despesa, ClassificacaoOrcamentaria pai);
+            "AND c.pai = :pai " +
+            "AND c.id <> :id")
+    boolean validaParaAtualizacaoFilho(String nome, Boolean despesa, ClassificacaoOrcamentaria pai, Long id);
+
+    @Query("SELECT COUNT(c.id) > 0 FROM ClassificacaoOrcamentaria c " +
+            "WHERE c.nome = :nome " +
+            "AND c.despesa = :despesa " +
+            "AND c.pai IS NULL")
+    boolean validaParaCadastramentoPai(String nome, Boolean despesa);
+
+    @Query("SELECT COUNT(c.id) > 0 FROM ClassificacaoOrcamentaria c " +
+            "WHERE c.nome = :nome " +
+            "AND c.despesa = :despesa " +
+            "AND c.pai =:pai")
+    boolean validaParaCadastramentoFilho(String nome, Boolean despesa, ClassificacaoOrcamentaria pai);
 
     @Query("SELECT COUNT(c.id) > 0 FROM ClassificacaoOrcamentaria c " +
             "WHERE c.pai.id = :pai")

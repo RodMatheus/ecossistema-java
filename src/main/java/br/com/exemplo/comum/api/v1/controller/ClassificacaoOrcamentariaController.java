@@ -70,14 +70,11 @@ public class ClassificacaoOrcamentariaController implements ClassificacaoOrcamen
     public ResponseEntity<ClassificacaoOrcamentariaDTO> getById(@PathVariable Long id) {
         log.info("LISTAGEM DE CLASSIFICAÇÃO ORÇAMENTÁRIA POR ID");
 
-        log.info("Iniciando processo de busca por ID. ID: {}.", id);
-        final ClassificacaoOrcamentaria classificacaoOrcamentaria = classificacaoOrcamentariaService
-                .pesquisaClassificacaoOrcamentariaPorId(id);
+        log.info("Iniciando processo de busca por ID.");
+        final ClassificacaoOrcamentaria classificacaoOrcamentaria = classificacaoOrcamentariaService.pesquisaClassificacaoOrcamentariaPorId(id);
 
-        log.info("Convertendo entidade de classificação orçamentária em DTO." +
-                " CLASSIFICAÇÃO ORÇAMENTARIA: {}.", classificacaoOrcamentaria);
-        final ClassificacaoOrcamentariaDTO classificacaoOrcamentariaDTO =
-                classificacaoOrcamentariaMapper.toResource(classificacaoOrcamentaria);
+        log.info("Convertendo entidade de classificação orçamentária em DTO." + " CLASSIFICAÇÃO ORÇAMENTARIA: {}.", classificacaoOrcamentaria);
+        final ClassificacaoOrcamentariaDTO classificacaoOrcamentariaDTO = classificacaoOrcamentariaMapper.toResource(classificacaoOrcamentaria);
 
         log.info("Retornando resposta da operação.");
         return ResponseEntity.ok(classificacaoOrcamentariaDTO);
@@ -104,17 +101,14 @@ public class ClassificacaoOrcamentariaController implements ClassificacaoOrcamen
                                                 @Valid @RequestBody ClassificacaoOrcamentariaParam classificacaoOrcamentariaParam) {
         log.info("ATUALIZAÇÃO DE CLASSIFICAÇÕES ORÇAMENTÁRIAS");
 
-        log.info("Iniciando processo de atualização da classificação orçamentária. " +
-                "CLASSIFICAÇÃO ORÇAMENTÁRIA: {}.", classificacaoOrcamentariaParam);
+        log.info("Iniciando processo de atualização da classificação orçamentária. CLASSIFICAÇÃO ORÇAMENTÁRIA: {}.", classificacaoOrcamentariaParam);
         final ClassificacaoOrcamentaria classificacaoOrcamentaria = classificacaoOrcamentariaService
                 .atualizaClassificacaoOrcamentaria(classificacaoOrcamentariaParam, id);
 
-        log.info("Convertendo entidade de classificação orçamentária em DTO." +
-                " CLASSIFICAÇÃO ORÇAMENTARIA: {}.", classificacaoOrcamentaria);
-        final ClassificacaoOrcamentariaDTO classificacaoOrcamentariaDTO = classificacaoOrcamentariaMapper
-                .toResource(classificacaoOrcamentaria);
+        log.info("Convertendo entidade de classificação orçamentária em DTO.");
+        final ClassificacaoOrcamentariaDTO classificacaoOrcamentariaDTO = classificacaoOrcamentariaMapper.toResource(classificacaoOrcamentaria);
 
-        log.info("Retornando resposta da operação.");
+        log.info("Retornando resposta da operação. DTO: {}.", classificacaoOrcamentariaDTO);
         return ResponseEntity.ok(classificacaoOrcamentariaDTO);
     }
 

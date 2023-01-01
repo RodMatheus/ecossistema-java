@@ -42,8 +42,8 @@ public class ClassificacaoOrcamentariaRepositoryImpl implements ClassificacaoOrc
     public List<ClassificacaoOrcamentaria> pesquisaPorFiltros(FiltroClassificacaoOrcamentaria filtros, Pageable paginacao) {
         CriteriaBuilder builder = manager.getCriteriaBuilder();
         CriteriaQuery<ClassificacaoOrcamentaria> criteria = builder.createQuery(ClassificacaoOrcamentaria.class);
-        Root<ClassificacaoOrcamentaria> root = criteria.from(ClassificacaoOrcamentaria.class);
 
+        Root<ClassificacaoOrcamentaria> root = criteria.from(ClassificacaoOrcamentaria.class);
         criteria.orderBy(builder.asc(root.get(ClassificacaoOrcamentaria_.ID)));
 
         List<Predicate> predicates = aplicaFiltros(filtros, root, builder);
@@ -51,15 +51,13 @@ public class ClassificacaoOrcamentariaRepositoryImpl implements ClassificacaoOrc
             criteria.where(predicates.toArray(new Predicate[0]));
         }
 
-        return manager.createQuery(criteria)
-                .setFirstResult((paginacao.getPageNumber() - 1) * paginacao.getPageSize())
-                .setMaxResults(paginacao.getPageSize())
-                .getResultList();
+        return manager.createQuery(criteria).getResultList();
     }
 
     private List<Predicate> aplicaFiltros(FiltroClassificacaoOrcamentaria filtros,
                                           Root<ClassificacaoOrcamentaria> root, CriteriaBuilder builder) {
         ArrayList<Predicate> predicates = new ArrayList<>();
+        predicates.add(builder.isNull(root.get(ClassificacaoOrcamentaria_.PAI)));
 
         if(!StringUtils.isEmpty(filtros.nome())) {
             predicates.add(
@@ -69,15 +67,6 @@ public class ClassificacaoOrcamentariaRepositoryImpl implements ClassificacaoOrc
         if(filtros.despesas() != null) {
             predicates.add(
                     builder.equal(root.get(ClassificacaoOrcamentaria_.DESPESA), filtros.despesas()));
-        }
-
-        if(filtros.pai() != null) {
-            Join<ClassificacaoOrcamentaria, ClassificacaoOrcamentaria> joinPai = root
-                    .join(ClassificacaoOrcamentaria_.PAI);
-            predicates.add(
-                    builder.equal(joinPai.get(ClassificacaoOrcamentaria_.ID), filtros.pai()));
-        } else {
-            predicates.add(builder.isNull(root.get(ClassificacaoOrcamentaria_.PAI)));
         }
 
         if(filtros.ativo() != null) {

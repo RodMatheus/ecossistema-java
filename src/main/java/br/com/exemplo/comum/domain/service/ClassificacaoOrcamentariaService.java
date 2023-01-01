@@ -34,24 +34,19 @@ public class ClassificacaoOrcamentariaService {
     }
     @Transactional
     public void cadastraClassificacaoOrcamentaria(final ClassificacaoOrcamentariaParam classificacaoOrcamentariaParam) {
-        log.info("Verificando a existência do pai informado.");
-        final ClassificacaoOrcamentaria pai = (classificacaoOrcamentariaParam.pai() == null)
-                ? null : this.existePai(classificacaoOrcamentariaParam.pai());
-
-        log.info("Verifica a existência da classificação orçamentária na base.");
-        this.validaCadastro(classificacaoOrcamentariaParam.nome(), classificacaoOrcamentariaParam.despesa(), pai);
+        log.info("Iniciando validações e recuperação de pai.");
+        final ClassificacaoOrcamentaria pai = this.validaCadastro(classificacaoOrcamentariaParam);
 
         log.info("Gerando entidade de classificação orçamentária para cadastro.");
         final ClassificacaoOrcamentaria classificacaoOrcamentaria = ClassificacaoOrcamentaria
                 .of(pai, classificacaoOrcamentariaParam.nome(), classificacaoOrcamentariaParam.despesa());
 
-        log.info("Cadastrando a classificação orçamentária na base." +
-                " CLASSIFICAÇÃO ORÇAMENTARIA: {}.", classificacaoOrcamentaria);
+        log.info("Cadastrando a classificação orçamentária na base. CLASSIFICAÇÃO ORÇAMENTARIA: {}.", classificacaoOrcamentaria);
         classificacaoOrcamentariaRepository.save(classificacaoOrcamentaria);
 
         log.info("Gerando log de transação.");
-        LogAuditoria logAuditoria = LogAuditoria.ofInclusao(SecurityUtil.getUsuarioLogado(),
-                Utilitarios.convertEntityLog(classificacaoOrcamentaria), ClassificacaoOrcamentaria.class);
+        LogAuditoria logAuditoria = LogAuditoria.ofInclusao(SecurityUtil.getUsuarioLogado(), Utilitarios
+                .convertEntityLog(classificacaoOrcamentaria), ClassificacaoOrcamentaria.class);
         logAuditoriaRepository.save(logAuditoria);
     }
 
@@ -62,12 +57,8 @@ public class ClassificacaoOrcamentariaService {
         log.info("Verificando a existência da classificação orçamentária. ID: {}.", id);
         ClassificacaoOrcamentaria classificacaoOrcamentaria = this.existeClassificacao(id);
 
-        log.info("Verificando a existência do pai informado.");
-        final ClassificacaoOrcamentaria pai = this.existePai(classificacaoOrcamentariaParam.pai());
-
-        log.info("Verifica a existência da classificação orçamentária na base com os novos dados.");
-        this.validaAtualizacao(classificacaoOrcamentariaParam.nome(),
-                classificacaoOrcamentariaParam.despesa(), pai, id);
+        log.info("Iniciando validações e recuperação de pai.");
+        final ClassificacaoOrcamentaria pai = this.validaAtualizacao(classificacaoOrcamentariaParam, id);
 
         log.info("Atualizando entidade de classificação orçamentária.");
         ClassificacaoOrcamentaria.ofAlteracao(classificacaoOrcamentaria, classificacaoOrcamentariaParam, pai);
@@ -104,17 +95,53 @@ public class ClassificacaoOrcamentariaService {
                         mensagemUtil.mensagemPersonalizada("erro.classificacao-orcamentaria-nao-encontrada")));
     }
 
-    private void validaCadastro(final String nome, final Boolean despesa, final ClassificacaoOrcamentaria pai) {
-        if(classificacaoOrcamentariaRepository.validaParaCadastramento(nome, despesa, pai)) {
+    private ClassificacaoOrcamentaria validaCadastro(final ClassificacaoOrcamentariaParam classificacaoOrcamentariaParam) {
+        ClassificacaoOrcamentaria pai = null;
+        if(classificacaoOrcamentariaParam.pai() == null) {
+            this.validaCadastroPai(classificacaoOrcamentariaParam.nome(), classificacaoOrcamentariaParam.despesa());
+        } else {
+            pai = existePai(classificacaoOrcamentariaParam.pai());
+            this.validaCadastroFilho(classificacaoOrcamentariaParam.nome(), classificacaoOrcamentariaParam.despesa(), pai);
+        }
+
+        return pai;
+    }
+
+    private void validaCadastroPai(final String nome, final Boolean despesa) {
+        if(classificacaoOrcamentariaRepository.validaParaCadastramentoPai(nome, despesa)) {
             throw new ValidacaoException(mensagemUtil
-                    .mensagemPersonalizada("erro.classificacao-orcamentaria-cadastrada"));
+                    .mensagemPersonalizada("erro.classificacao-orcamentaria-pai-cadastrada"));
         }
     }
-    private void validaAtualizacao(final String nome, final Boolean despesa
-            , final ClassificacaoOrcamentaria pai, final Long id) {
-        if(classificacaoOrcamentariaRepository.validaParaAtualizacao(nome, despesa, pai, id)) {
+
+    private void validaCadastroFilho(final String nome, final Boolean despesa, final ClassificacaoOrcamentaria pai) {
+        if(classificacaoOrcamentariaRepository.validaParaCadastramentoFilho(nome, despesa, pai)) {
             throw new ValidacaoException(mensagemUtil
-                    .mensagemPersonalizada("erro.classificacao-orcamentaria-cadastrada"));
+                    .mensagemPersonalizada("erro.classificacao-orcamentaria-filha-cadastrada"));
+        }
+    }
+
+    private ClassificacaoOrcamentaria validaAtualizacao(final ClassificacaoOrcamentariaParam classificacaoOrcamentariaParam, final Long id) {
+        ClassificacaoOrcamentaria pai = null;
+        if(classificacaoOrcamentariaParam.pai() == null) {
+            this.validaAtualizacaoPai(classificacaoOrcamentariaParam.nome(), classificacaoOrcamentariaParam.despesa(), id);
+        } else {
+            pai = this.existePai(classificacaoOrcamentariaParam.pai());
+            this.validaAtualizacaoFilho(classificacaoOrcamentariaParam.nome(), classificacaoOrcamentariaParam.despesa(), pai, id);
+        }
+
+        return pai;
+    }
+
+    private void validaAtualizacaoPai(final String nome, final Boolean despesa, final Long id) {
+        if(classificacaoOrcamentariaRepository.validaParaAtualizacaoPai(nome, despesa, id)) {
+            throw new ValidacaoException(mensagemUtil.mensagemPersonalizada("erro.classificacao-orcamentaria-pai-cadastrada"));
+        }
+    }
+
+    private void validaAtualizacaoFilho(final String nome, final Boolean despesa, final ClassificacaoOrcamentaria pai, final Long id) {
+        if(classificacaoOrcamentariaRepository.validaParaAtualizacaoFilho(nome, despesa, pai, id)) {
+            throw new ValidacaoException(mensagemUtil.mensagemPersonalizada("erro.classificacao-orcamentaria-filha-cadastrada"));
         }
     }
 
@@ -127,14 +154,12 @@ public class ClassificacaoOrcamentariaService {
     private ClassificacaoOrcamentaria existePai(final Long id) {
         return classificacaoOrcamentariaRepository.findById(id)
                 .orElseThrow(() -> new ValidacaoException(
-                        mensagemUtil
-                                .mensagemPersonalizada("erro.classificacao-orcamentaria-pai-nao-encontrada")));
+                        mensagemUtil.mensagemPersonalizada("erro.classificacao-orcamentaria-pai-nao-encontrada")));
     }
 
     private void existemFilhos(final Long pai) {
         if(classificacaoOrcamentariaRepository.validaPai(pai)) {
-            throw new ValidacaoException(mensagemUtil
-                    .mensagemPersonalizada("erro.classificacao-orcamentaria-possui-filhos"));
+            throw new ValidacaoException(mensagemUtil.mensagemPersonalizada("erro.classificacao-orcamentaria-possui-filhos"));
         }
     }
 }

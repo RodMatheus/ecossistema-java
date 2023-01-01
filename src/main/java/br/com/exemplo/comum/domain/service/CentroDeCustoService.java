@@ -55,7 +55,7 @@ public class CentroDeCustoService {
         log.info("Verificando a existência do centro de custo. ID: {}.", id);
         CentroDeCusto centroDeCusto = this.existeCentroDeCusto(id);
 
-        log.info("Verifica a existência do banco na base com os novos dados.");
+        log.info("Verifica a existência do centro de custo na base com os novos dados.");
         this.validaAtualizacao(centroDeCustoParam, id);
 
         log.info("Atualizando entidade de Centro de custo.");

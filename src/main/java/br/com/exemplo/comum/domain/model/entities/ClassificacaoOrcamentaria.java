@@ -11,8 +11,7 @@ import lombok.Setter;
 import org.hibernate.annotations.Where;
 
 import java.io.Serializable;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Entity
 @Getter
@@ -44,9 +43,9 @@ public class ClassificacaoOrcamentaria implements Serializable {
     private ClassificacaoOrcamentaria pai;
 
     @JsonIgnore
-    @JoinColumn(name = "pai")
+    @JoinColumn(name = "pai", updatable = false, insertable = false)
     @OneToMany(fetch = FetchType.LAZY)
-    private List<ClassificacaoOrcamentaria> filhos;
+    private Set<ClassificacaoOrcamentaria> filhos;
 
 
     public static ClassificacaoOrcamentaria of(final ClassificacaoOrcamentaria pai, final String nome, final Boolean despesa) {
@@ -83,12 +82,12 @@ public class ClassificacaoOrcamentaria implements Serializable {
         ClassificacaoOrcamentaria that = (ClassificacaoOrcamentaria) o;
         return despesa == that.despesa && ativo == that.ativo
                 && removido == that.removido && id.equals(that.id) && nome.equals(that.nome)
-                && Objects.equals(pai, that.pai) && Objects.equals(filhos, that.filhos);
+                && Objects.equals(pai, that.pai) ;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, nome, despesa, ativo, removido, pai, filhos);
+        return Objects.hash(id, nome, despesa, ativo, removido, pai);
     }
 
     @Override
@@ -100,7 +99,6 @@ public class ClassificacaoOrcamentaria implements Serializable {
                 ", ativo=" + ativo +
                 ", removido=" + removido +
                 ", pai=" + pai +
-                ", filhos=" + filhos +
                 '}';
     }
 }

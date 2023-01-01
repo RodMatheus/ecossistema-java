@@ -54,7 +54,7 @@ public class BancoController implements BancoControllerOpenApi {
             final List<Banco> bancos = bancoRepository
                     .pesquisaPorFiltros(filtros, PageRequest.of(page, size));
 
-            log.info("Convertendo entidades de Banco em DTO. BANCOS: {}.", bancos);
+            log.info("Convertendo entidades de Banco em DTO.");
             bancosDTO = bancoMapper.toResourceList(bancos);
         }
 
@@ -70,13 +70,13 @@ public class BancoController implements BancoControllerOpenApi {
     public ResponseEntity<BancoDTO> getById(@PathVariable Long id) {
         log.info("LISTAGEM DE BANCO POR ID");
 
-        log.info("Iniciando processo de busca por ID. ID: {}.", id);
+        log.info("Iniciando processo de busca por ID.");
         final Banco banco = bancoService.pesquisaBancoPorId(id);
 
-        log.info("Convertendo entidade de Banco em DTO. BANCO: {}.", banco);
+        log.info("Convertendo entidade de Banco em DTO.");
         final BancoDTO bancoDTO = bancoMapper.toResource(banco);
 
-        log.info("Retornando resposta da operação.");
+        log.info("Retornando resposta da operação. DTO: {}.", bancoDTO);
         return ResponseEntity.ok(bancoDTO);
     }
 
@@ -102,10 +102,10 @@ public class BancoController implements BancoControllerOpenApi {
         log.info("Iniciando processo de atualização do banco. BANCO: {}.", bancoParam);
         final Banco banco = bancoService.atualizaBanco(bancoParam, id);
 
-        log.info("Convertendo entidade de Banco em DTO. BANCO: {}.", banco);
+        log.info("Convertendo entidade de Banco em DTO.");
         final BancoDTO bancoDTO = bancoMapper.toResource(banco);
 
-        log.info("Retornando resposta da operação.");
+        log.info("Retornando resposta da operação. DTO: {}.", bancoDTO);
         return ResponseEntity.ok(bancoDTO);
     }
 

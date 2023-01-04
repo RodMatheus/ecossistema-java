@@ -9,11 +9,11 @@ import org.springframework.stereotype.Repository;
 public interface CentroDeCustoRepository  extends JpaRepository<CentroDeCusto, Long>, CentroDeCustoRepositoryCustom {
 
     @Query("SELECT COUNT(c.id) > 0 FROM CentroDeCusto c " +
-            "WHERE c.nome = :nome")
+            "WHERE unaccent(lower(c.nome)) = unaccent(lower(:nome))")
     boolean validaParaCadastro(String nome);
 
     @Query("SELECT COUNT(c.id) > 0 FROM CentroDeCusto c " +
-            "WHERE c.nome = :nome " +
+            "WHERE unaccent(lower(c.nome)) = unaccent(lower(:nome)) " +
             "AND c.id <> :id")
     boolean validaParaAtualizacao(String nome, Long id);
 }

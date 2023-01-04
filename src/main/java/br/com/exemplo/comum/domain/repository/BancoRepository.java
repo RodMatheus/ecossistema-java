@@ -10,11 +10,11 @@ public interface BancoRepository extends JpaRepository<Banco, Long>, BancoReposi
 
     @Query("SELECT COUNT(b.id) > 0 FROM Banco b " +
             "WHERE b.codigo = :codigo " +
-            "OR unaccent(b.nome) = unaccent(:nome)" )
+            "OR unaccent(lower(b.nome)) = unaccent(lower(:nome))" )
     boolean validaParaCadastro(String codigo, String nome);
 
     @Query("SELECT COUNT(b.id) > 0 FROM Banco b " +
             "WHERE b.id <> :id " +
-            "AND (unaccent(b.nome) = unaccent(:nome) or b.codigo = :codigo)")
+            "AND (unaccent(lower(b.nome)) = unaccent(lower(:nome)) OR b.codigo = :codigo)")
     boolean validaParaAtualizacao(String codigo, String nome, Long id);
 }

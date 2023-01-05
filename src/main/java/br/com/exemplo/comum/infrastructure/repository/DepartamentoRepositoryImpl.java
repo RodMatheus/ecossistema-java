@@ -65,7 +65,10 @@ public class DepartamentoRepositoryImpl implements DepartamentoRepositoryCustom 
 
         if(!StringUtils.isEmpty(filtros.nome())) {
             predicates.add(
-                    builder.like(root.get(Departamento_.NOME), Utilitarios.likeFunction(filtros.nome())));
+                    builder.like(
+                            builder.function(
+                                    Utilitarios.UNACCENT_FUNCTION, String.class, builder.lower(root.get(Departamento_.NOME))),
+                            Utilitarios.likeUnaccentFunction(filtros.nome())));
         }
 
         if(filtros.ativo() != null) {

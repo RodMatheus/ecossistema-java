@@ -9,11 +9,11 @@ import org.springframework.stereotype.Repository;
 public interface DepartamentoRepository  extends JpaRepository<Departamento, Long>, DepartamentoRepositoryCustom {
 
     @Query("SELECT COUNT(d.id) > 0 FROM Departamento d " +
-            "WHERE d.nome = :nome")
+            "WHERE unaccent(lower(d.nome)) = unaccent(lower(:nome))")
     boolean validaParaCadastro(String nome);
 
     @Query("SELECT COUNT(d.id) > 0 FROM Departamento d " +
-            "WHERE d.nome = :nome " +
+            "WHERE unaccent(lower(d.nome)) = unaccent(lower(:nome)) " +
             "AND d.id <> :id")
     boolean validaParaAtualizacao(String nome, Long id);
 }

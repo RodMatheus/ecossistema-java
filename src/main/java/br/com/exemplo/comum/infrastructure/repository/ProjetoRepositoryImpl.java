@@ -65,7 +65,10 @@ public class ProjetoRepositoryImpl implements ProjetoRepositoryCustom {
 
         if(!StringUtils.isEmpty(filtros.nome())) {
             predicates.add(
-                    builder.like(root.get(Projeto_.NOME), Utilitarios.likeFunction(filtros.nome())));
+                    builder.like(
+                            builder.function(
+                                    Utilitarios.UNACCENT_FUNCTION, String.class, builder.lower(root.get(Projeto_.NOME))),
+                                    Utilitarios.likeUnaccentFunction(filtros.nome())));
         }
 
         if(filtros.ativo() != null) {

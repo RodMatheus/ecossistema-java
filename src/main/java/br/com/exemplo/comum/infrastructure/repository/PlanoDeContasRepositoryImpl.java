@@ -59,7 +59,10 @@ public class PlanoDeContasRepositoryImpl implements PlanoDeContasRepositoryCusto
 
         if(!StringUtils.isEmpty(filtros.nome())) {
             predicates.add(
-                    builder.like(root.get(PlanoDeContas_.NOME), Utilitarios.likeFunction(filtros.nome())));
+                    builder.like(
+                            builder.function(
+                                    Utilitarios.UNACCENT_FUNCTION, String.class, builder.lower(root.get(PlanoDeContas_.NOME))),
+                                    Utilitarios.likeUnaccentFunction(filtros.nome())));
         }
 
         if(filtros.despesa() != null) {

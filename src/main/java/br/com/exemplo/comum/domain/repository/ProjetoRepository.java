@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 public interface ProjetoRepository  extends JpaRepository<Projeto, Long>, ProjetoRepositoryCustom {
 
     @Query("SELECT COUNT(p.id) > 0 FROM Projeto p " +
-            "WHERE p.nome = :nome ")
+            "WHERE unaccent(lower(p.nome)) = unaccent(lower(:nome)) ")
     boolean validaParaCadastro(String nome);
 
     @Query("SELECT COUNT(p.id) > 0 FROM Projeto p " +

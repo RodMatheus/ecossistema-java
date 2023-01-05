@@ -19,3 +19,10 @@ INSERT INTO comum.plano_de_contas(nome, despesa, pai, removido) values ('Federal
 INSERT INTO comum.plano_de_contas(nome, despesa, pai, removido) values ('INSS', true, 2, false);
 INSERT INTO comum.plano_de_contas(nome, despesa, pai, removido) values ('Despesas administrativas', true, null, false);
 
+-- CLASSIFICAÇÕES ORÇAMENTÁRIAS
+INSERT INTO comum.classificacao_orcamentaria(nome, despesa, pai, removido) values ('Legislativa', true, null, false);
+INSERT INTO comum.classificacao_orcamentaria(nome, despesa, pai, removido) values ('Ação legislativa', true, 1, false);
+INSERT INTO comum.classificacao_orcamentaria(nome, despesa, pai, removido) values ('Controle externo', true, 1, false);
+INSERT INTO comum.classificacao_orcamentaria(nome, despesa, pai, removido) values ('Judiciário', true, null, false);
+INSERT INTO comum.classificacao_orcamentaria(nome, despesa, pai, removido) values ('Ação judiciária', true, 4, false);
+INSERT INTO comum.classificacao_orcamentaria(nome, despesa, pai, removido) values ('Administração', true, null, false);

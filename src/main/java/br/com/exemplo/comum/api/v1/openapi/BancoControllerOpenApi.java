@@ -3,7 +3,8 @@ package br.com.exemplo.comum.api.v1.openapi;
 import br.com.exemplo.comum.api.exceptionhandler.ErroDTO;
 import br.com.exemplo.comum.api.v1.filter.FiltroBanco;
 import br.com.exemplo.comum.api.v1.model.dto.BancoDTO;
-import br.com.exemplo.comum.api.v1.model.input.BancoParam;
+import br.com.exemplo.comum.api.v1.model.input.PostBanco;
+import br.com.exemplo.comum.api.v1.model.input.PutBanco;
 import br.com.exemplo.comum.infrastructure.util.WebUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -63,7 +64,7 @@ public interface BancoControllerOpenApi {
                             content = @Content(schema = @Schema(implementation = ErroDTO.class))),
                     @ApiResponse(responseCode = "201")
     })
-    ResponseEntity<Void> post(@Parameter(required = true) BancoParam bancoParam);
+    ResponseEntity<Void> post(@Parameter(required = true) PostBanco postBanco);
 
     @Operation(summary = "Atualiza bancos",
             description = "Endpoint para atualizar um banco.",
@@ -82,7 +83,7 @@ public interface BancoControllerOpenApi {
             })
     ResponseEntity<BancoDTO> put(
             @Parameter(required = true, in = ParameterIn.PATH) Long id,
-            @Parameter(required = true) BancoParam bancoParam);
+            @Parameter(required = true) PutBanco putBanco);
 
     @Operation(summary = "Exclui bancos",
             description = "Endpoint para excluir um banco.",

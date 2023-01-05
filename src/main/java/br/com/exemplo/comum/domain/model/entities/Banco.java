@@ -1,6 +1,6 @@
 package br.com.exemplo.comum.domain.model.entities;
 
-import br.com.exemplo.comum.api.v1.model.input.BancoParam;
+import br.com.exemplo.comum.api.v1.model.input.PutBanco;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -50,9 +50,9 @@ public class Banco implements Serializable {
         return banco;
     }
 
-    public static void ofAlteracao(Banco banco, final BancoParam bancoParam) {
-        banco.setCodigo(bancoParam.codigo());
-        banco.setNome(bancoParam.nome());
+    public static void ofAlteracao(Banco banco, final PutBanco putBanco) {
+        banco.setCodigo(putBanco.codigo());
+        banco.setNome(putBanco.nome());
     }
 
     public static void ofExclusao(Banco banco) {

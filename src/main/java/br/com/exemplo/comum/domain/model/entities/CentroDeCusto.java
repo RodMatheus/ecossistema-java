@@ -1,6 +1,6 @@
 package br.com.exemplo.comum.domain.model.entities;
 
-import br.com.exemplo.comum.api.v1.model.input.CentroDeCustoParam;
+import br.com.exemplo.comum.api.v1.model.input.PutCentroDeCusto;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -45,8 +45,8 @@ public class CentroDeCusto implements Serializable {
         return centroDeCusto;
     }
 
-    public static void ofAlteracao(CentroDeCusto centroDeCusto, final CentroDeCustoParam centroDeCustoParam) {
-        centroDeCusto.setNome(centroDeCustoParam.nome());
+    public static void ofAlteracao(CentroDeCusto centroDeCusto, final PutCentroDeCusto putCentroDeCusto) {
+        centroDeCusto.setNome(putCentroDeCusto.nome());
     }
 
     public static void ofExclusao(CentroDeCusto centroDeCusto) {

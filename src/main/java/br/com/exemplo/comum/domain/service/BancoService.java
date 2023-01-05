@@ -1,6 +1,7 @@
 package br.com.exemplo.comum.domain.service;
 
-import br.com.exemplo.comum.api.v1.model.input.BancoParam;
+import br.com.exemplo.comum.api.v1.model.input.PostBanco;
+import br.com.exemplo.comum.api.v1.model.input.PutBanco;
 import br.com.exemplo.comum.core.exception.RecursoNaoEncontradoException;
 import br.com.exemplo.comum.core.exception.ValidacaoException;
 import br.com.exemplo.comum.domain.model.entities.Banco;
@@ -33,12 +34,12 @@ public class BancoService {
 
     }
     @Transactional
-    public void cadastraBanco(final BancoParam bancoParam) {
+    public void cadastraBanco(final PostBanco postBanco) {
         log.info("Verifica a existência do banco na base.");
-        this.validaCadastro(bancoParam);
+        this.validaCadastro(postBanco);
 
         log.info("Gerando entidade de banco para cadastro.");
-        final Banco banco = Banco.of(bancoParam.codigo(), bancoParam.nome());
+        final Banco banco = Banco.of(postBanco.codigo(), postBanco.nome());
 
         log.info("Cadastrando o banco na base. BANCO: {}.", banco);
         bancoRepository.save(banco);
@@ -51,15 +52,15 @@ public class BancoService {
 
     @Transactional
     @Lock(LockModeType.PESSIMISTIC_READ)
-    public Banco atualizaBanco(final BancoParam bancoParam, final Long id) {
+    public Banco atualizaBanco(final PutBanco putBanco, final Long id) {
         log.info("Verificando a existência do BANCO. ID: {}.", id);
         Banco banco = this.existeBanco(id);
 
         log.info("Verifica a existência do banco na base com os novos dados.");
-        this.validaAtualizacao(bancoParam, id);
+        this.validaAtualizacao(putBanco, id);
 
         log.info("Atualizando entidade de Banco.");
-        Banco.ofAlteracao(banco, bancoParam);
+        Banco.ofAlteracao(banco, putBanco);
 
         log.info("Gerando log de transação.");
         LogAuditoria logAuditoria = LogAuditoria.ofAlteracao(SecurityUtil.getUsuarioLogado(),
@@ -90,14 +91,14 @@ public class BancoService {
                         mensagemUtil.mensagemPersonalizada("erro.banco-nao-encontrado")));
     }
 
-    private void validaCadastro(final BancoParam bancoParam) {
-        if(bancoRepository.validaParaCadastro(bancoParam.codigo(), bancoParam.nome())) {
+    private void validaCadastro(final PostBanco postBanco) {
+        if(bancoRepository.validaParaCadastro(postBanco.codigo(), postBanco.nome())) {
             throw new ValidacaoException(mensagemUtil.mensagemPersonalizada("erro.banco-cadastrado"));
         }
     }
 
-    private void validaAtualizacao(final BancoParam bancoParam, final Long id) {
-        if(bancoRepository.validaParaAtualizacao(bancoParam.codigo(), bancoParam.nome(), id)) {
+    private void validaAtualizacao(final PutBanco putBanco, final Long id) {
+        if(bancoRepository.validaParaAtualizacao(putBanco.codigo(), putBanco.nome(), id)) {
             throw new ValidacaoException(mensagemUtil.mensagemPersonalizada("erro.banco-cadastrado"));
         }
     }

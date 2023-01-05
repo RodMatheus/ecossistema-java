@@ -3,7 +3,8 @@ package br.com.exemplo.comum.api.v1.controller;
 import br.com.exemplo.comum.api.v1.filter.FiltroBanco;
 import br.com.exemplo.comum.api.v1.mapper.BancoMapper;
 import br.com.exemplo.comum.api.v1.model.dto.BancoDTO;
-import br.com.exemplo.comum.api.v1.model.input.BancoParam;
+import br.com.exemplo.comum.api.v1.model.input.PostBanco;
+import br.com.exemplo.comum.api.v1.model.input.PutBanco;
 import br.com.exemplo.comum.api.v1.openapi.BancoControllerOpenApi;
 import br.com.exemplo.comum.core.security.CheckSecurity;
 import br.com.exemplo.comum.domain.model.entities.Banco;
@@ -82,11 +83,11 @@ public class BancoController implements BancoControllerOpenApi {
 
     @PostMapping
     @CheckSecurity.comum.maintain
-    public ResponseEntity<Void> post(@Valid @RequestBody BancoParam bancoParam) {
+    public ResponseEntity<Void> post(@Valid @RequestBody PostBanco postBanco) {
         log.info("CADASTRO DE BANCOS");
 
-        log.info("Iniciando processo de cadastramento do banco. BANCO: {}.", bancoParam);
-        bancoService.cadastraBanco(bancoParam);
+        log.info("Iniciando processo de cadastramento do banco. BANCO: {}.", postBanco);
+        bancoService.cadastraBanco(postBanco);
 
        log.info("Retornando resposta da operação.");
        return ResponseEntity
@@ -96,11 +97,11 @@ public class BancoController implements BancoControllerOpenApi {
 
     @PutMapping("/{id}")
     @CheckSecurity.comum.maintain
-    public ResponseEntity<BancoDTO> put(@PathVariable Long id, @Valid @RequestBody BancoParam bancoParam) {
+    public ResponseEntity<BancoDTO> put(@PathVariable Long id, @Valid @RequestBody PutBanco putBanco) {
         log.info("ATUALIZAÇÃO DE BANCOS");
 
-        log.info("Iniciando processo de atualização do banco. BANCO: {}.", bancoParam);
-        final Banco banco = bancoService.atualizaBanco(bancoParam, id);
+        log.info("Iniciando processo de atualização do banco. BANCO: {}.", putBanco);
+        final Banco banco = bancoService.atualizaBanco(putBanco, id);
 
         log.info("Convertendo entidade de Banco em DTO.");
         final BancoDTO bancoDTO = bancoMapper.toResource(banco);

@@ -3,7 +3,8 @@ package br.com.exemplo.comum.api.v1.openapi;
 import br.com.exemplo.comum.api.exceptionhandler.ErroDTO;
 import br.com.exemplo.comum.api.v1.filter.FiltroCentroDeCusto;
 import br.com.exemplo.comum.api.v1.model.dto.CentroDeCustoDTO;
-import br.com.exemplo.comum.api.v1.model.input.CentroDeCustoParam;
+import br.com.exemplo.comum.api.v1.model.input.PostCentroDeCusto;
+import br.com.exemplo.comum.api.v1.model.input.PutCentroDeCusto;
 import br.com.exemplo.comum.infrastructure.util.WebUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -63,7 +64,7 @@ public interface CentroDeCustoControllerOpenApi {
                             content = @Content(schema = @Schema(implementation = ErroDTO.class))),
                     @ApiResponse(responseCode = "201")
     })
-    ResponseEntity<Void> post(@Parameter(required = true) CentroDeCustoParam centroDeCustoParam);
+    ResponseEntity<Void> post(@Parameter(required = true) PostCentroDeCusto postCentroDeCusto);
 
     @Operation(summary = "Atualiza centros de custo",
             description = "Endpoint para atualizar um centro de custo.",
@@ -82,7 +83,7 @@ public interface CentroDeCustoControllerOpenApi {
             })
     ResponseEntity<CentroDeCustoDTO> put(
             @Parameter(required = true, in = ParameterIn.PATH) Long id,
-            @Parameter(required = true) CentroDeCustoParam centroDeCustoParam);
+            @Parameter(required = true) PutCentroDeCusto putCentroDeCusto);
 
     @Operation(summary = "Exclui centros de custo",
             description = "Endpoint para excluir um centro de custo.",

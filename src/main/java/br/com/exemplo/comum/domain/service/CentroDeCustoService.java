@@ -1,6 +1,7 @@
 package br.com.exemplo.comum.domain.service;
 
-import br.com.exemplo.comum.api.v1.model.input.CentroDeCustoParam;
+import br.com.exemplo.comum.api.v1.model.input.PostCentroDeCusto;
+import br.com.exemplo.comum.api.v1.model.input.PutCentroDeCusto;
 import br.com.exemplo.comum.core.exception.RecursoNaoEncontradoException;
 import br.com.exemplo.comum.core.exception.ValidacaoException;
 import br.com.exemplo.comum.domain.model.entities.CentroDeCusto;
@@ -33,12 +34,12 @@ public class CentroDeCustoService {
 
     }
     @Transactional
-    public void cadastraCentroDeCusto(final CentroDeCustoParam centroDeCustoParam) {
+    public void cadastraCentroDeCusto(final PostCentroDeCusto postCentroDeCusto) {
         log.info("Verifica a existência do centro de custo na base.");
-        this.validaCadastro(centroDeCustoParam);
+        this.validaCadastro(postCentroDeCusto);
 
         log.info("Gerando entidade de centro de custo para cadastro.");
-        final CentroDeCusto centroDeCusto = CentroDeCusto.of(centroDeCustoParam.nome());
+        final CentroDeCusto centroDeCusto = CentroDeCusto.of(postCentroDeCusto.nome());
 
         log.info("Cadastrando o centro de custo na base. CENTRO DE CUSTO: {}.", centroDeCusto);
         centroDeCustoRepository.save(centroDeCusto);
@@ -51,15 +52,15 @@ public class CentroDeCustoService {
 
     @Transactional
     @Lock(LockModeType.PESSIMISTIC_READ)
-    public CentroDeCusto atualizaCentroDeCusto(final CentroDeCustoParam centroDeCustoParam, final Long id) {
+    public CentroDeCusto atualizaCentroDeCusto(final PutCentroDeCusto putCentroDeCusto, final Long id) {
         log.info("Verificando a existência do centro de custo. ID: {}.", id);
         CentroDeCusto centroDeCusto = this.existeCentroDeCusto(id);
 
         log.info("Verifica a existência do centro de custo na base com os novos dados.");
-        this.validaAtualizacao(centroDeCustoParam, id);
+        this.validaAtualizacao(putCentroDeCusto, id);
 
         log.info("Atualizando entidade de Centro de custo.");
-        CentroDeCusto.ofAlteracao(centroDeCusto, centroDeCustoParam);
+        CentroDeCusto.ofAlteracao(centroDeCusto, putCentroDeCusto);
 
         log.info("Gerando log de transação.");
         LogAuditoria logAuditoria = LogAuditoria.ofAlteracao(SecurityUtil.getUsuarioLogado(),
@@ -90,14 +91,14 @@ public class CentroDeCustoService {
                         mensagemUtil.mensagemPersonalizada("erro.centro-custo-nao-encontrado")));
     }
 
-    private void validaCadastro(final CentroDeCustoParam centroDeCustoParam) {
-        if(centroDeCustoRepository.validaParaCadastro(centroDeCustoParam.nome())) {
+    private void validaCadastro(final PostCentroDeCusto postCentroDeCusto) {
+        if(centroDeCustoRepository.validaParaCadastro(postCentroDeCusto.nome())) {
             throw new ValidacaoException(mensagemUtil.mensagemPersonalizada("erro.centro-custo-cadastrado"));
         }
     }
 
-    private void validaAtualizacao(final CentroDeCustoParam centroDeCustoParam, final Long id) {
-        if(centroDeCustoRepository.validaParaAtualizacao(centroDeCustoParam.nome(), id)) {
+    private void validaAtualizacao(final PutCentroDeCusto putCentroDeCusto, final Long id) {
+        if(centroDeCustoRepository.validaParaAtualizacao(putCentroDeCusto.nome(), id)) {
             throw new ValidacaoException(mensagemUtil.mensagemPersonalizada("erro.centro-custo-cadastrado"));
         }
     }

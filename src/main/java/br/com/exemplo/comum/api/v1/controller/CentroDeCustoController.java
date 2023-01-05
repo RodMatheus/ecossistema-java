@@ -2,7 +2,8 @@ package br.com.exemplo.comum.api.v1.controller;
 
 import br.com.exemplo.comum.api.v1.filter.FiltroCentroDeCusto;
 import br.com.exemplo.comum.api.v1.model.dto.CentroDeCustoDTO;
-import br.com.exemplo.comum.api.v1.model.input.CentroDeCustoParam;
+import br.com.exemplo.comum.api.v1.model.input.PostCentroDeCusto;
+import br.com.exemplo.comum.api.v1.model.input.PutCentroDeCusto;
 import br.com.exemplo.comum.api.v1.openapi.CentroDeCustoControllerOpenApi;
 import br.com.exemplo.comum.core.security.CheckSecurity;
 import br.com.exemplo.comum.domain.model.entities.CentroDeCusto;
@@ -82,11 +83,11 @@ public class CentroDeCustoController implements CentroDeCustoControllerOpenApi {
 
     @PostMapping
     @CheckSecurity.comum.maintain
-    public ResponseEntity<Void> post(@Valid @RequestBody CentroDeCustoParam centroDeCustoParam) {
+    public ResponseEntity<Void> post(@Valid @RequestBody PostCentroDeCusto postCentroDeCusto) {
         log.info("CADASTRO DE CENTROS DE CUSTO");
 
-        log.info("Iniciando processo de cadastramento do centro de custo. CENTRO DE CUSTO: {}.", centroDeCustoParam);
-        centroDeCustoService.cadastraCentroDeCusto(centroDeCustoParam);
+        log.info("Iniciando processo de cadastramento do centro de custo. CENTRO DE CUSTO: {}.", postCentroDeCusto);
+        centroDeCustoService.cadastraCentroDeCusto(postCentroDeCusto);
 
        log.info("Retornando resposta da operação.");
        return ResponseEntity
@@ -96,11 +97,11 @@ public class CentroDeCustoController implements CentroDeCustoControllerOpenApi {
 
     @PutMapping("/{id}")
     @CheckSecurity.comum.maintain
-    public ResponseEntity<CentroDeCustoDTO> put(@PathVariable Long id, @Valid @RequestBody CentroDeCustoParam centroDeCustoParam) {
+    public ResponseEntity<CentroDeCustoDTO> put(@PathVariable Long id, @Valid @RequestBody PutCentroDeCusto putCentroDeCusto) {
         log.info("ATUALIZAÇÃO DE CENTROS DE CUSTO");
 
-        log.info("Iniciando processo de atualização do centro de custo. CENTRO DE CUSTO: {}.", centroDeCustoParam);
-        final CentroDeCusto centroDeCusto = centroDeCustoService.atualizaCentroDeCusto(centroDeCustoParam, id);
+        log.info("Iniciando processo de atualização do centro de custo. CENTRO DE CUSTO: {}.", putCentroDeCusto);
+        final CentroDeCusto centroDeCusto = centroDeCustoService.atualizaCentroDeCusto(putCentroDeCusto, id);
 
         log.info("Convertendo entidade de Centro de custo em DTO.");
         final CentroDeCustoDTO centroDeCustoDTO = centroDeCustoMapper.toResource(centroDeCusto);

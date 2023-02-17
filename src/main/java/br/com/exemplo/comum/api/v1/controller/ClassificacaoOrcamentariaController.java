@@ -1,6 +1,5 @@
 package br.com.exemplo.comum.api.v1.controller;
 
-import br.com.exemplo.comum.api.v1.filter.FiltroClassificacaoOrcamentaria;
 import br.com.exemplo.comum.api.v1.mapper.ClassificacaoOrcamentariaMapper;
 import br.com.exemplo.comum.api.v1.model.dto.ClassificacaoOrcamentariaDTO;
 import br.com.exemplo.comum.api.v1.model.input.ClassificacaoOrcamentariaParam;
@@ -39,23 +38,23 @@ public class ClassificacaoOrcamentariaController implements ClassificacaoOrcamen
 
     @GetMapping
     @CheckSecurity.comum.all
-    public ResponseEntity<List<ClassificacaoOrcamentariaDTO>> get(FiltroClassificacaoOrcamentaria filtros) {
+    public ResponseEntity<List<ClassificacaoOrcamentariaDTO>> get() {
         log.info("LISTAGEM DE CLASSIFICAÇÕES ORÇAMENTÁRIAS");
         List<ClassificacaoOrcamentariaDTO> classificacoesOrcamentariasDTO = List.of();
 
-        log.info("Contando classificações orçamentárias por filtros. FILTROS: {}.", filtros);
-        final Long total = classificacaoOrcamentariaRepository.contaPorFiltros(filtros);
+        log.info("Contando classificações orçamentárias.");
+        final Long total = classificacaoOrcamentariaRepository.countAllPais();
 
         if(total > 0) {
             log.info("Pesquisando classificações orçamentárias.");
             final List<ClassificacaoOrcamentaria> classificacaoOrcamentarias = classificacaoOrcamentariaRepository
-                    .pesquisaPorFiltros(filtros);
+                    .findAllPais();
 
             log.info("Convertendo entidades de Planos de contas em DTO.");
             classificacoesOrcamentariasDTO = classificacaoOrcamentariaMapper.toResourceList(classificacaoOrcamentarias);
         }
 
-        log.info("Retornando dtos de resposta. DTOS: {}.", classificacoesOrcamentariasDTO);
+        log.info("Retornando dtos de resposta.");
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .header(WebUtil.X_TOTAL_COUNT_HEADER, String.valueOf(total))

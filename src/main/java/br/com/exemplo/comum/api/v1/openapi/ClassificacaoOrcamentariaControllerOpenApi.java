@@ -1,7 +1,6 @@
 package br.com.exemplo.comum.api.v1.openapi;
 
 import br.com.exemplo.comum.api.exceptionhandler.ErroDTO;
-import br.com.exemplo.comum.api.v1.filter.FiltroClassificacaoOrcamentaria;
 import br.com.exemplo.comum.api.v1.model.dto.ClassificacaoOrcamentariaDTO;
 import br.com.exemplo.comum.api.v1.model.input.ClassificacaoOrcamentariaParam;
 import br.com.exemplo.comum.infrastructure.util.WebUtil;
@@ -21,7 +20,7 @@ import java.util.List;
 public interface ClassificacaoOrcamentariaControllerOpenApi {
 
     @Operation(summary = "Lista de classificações orçamentárias",
-        description = "Endpoint para a listagem de classificações orçamentárias com filtros.",
+        description = "Endpoint para a listagem de classificações orçamentárias.",
           responses = {
             @ApiResponse(responseCode = "500", description = WebUtil.INTERNAL_SERVER_DEFAULT_RESPONSE,
                 content = @Content(schema = @Schema(implementation = ErroDTO.class))),
@@ -29,12 +28,10 @@ public interface ClassificacaoOrcamentariaControllerOpenApi {
                 content = @Content(schema = @Schema(implementation = ErroDTO.class))),
             @ApiResponse(responseCode = "200",
                     headers = @Header(name = WebUtil.X_TOTAL_COUNT_HEADER,
-                        description = "Totalização de todos os registros existentes com os filtros selecionados.",
+                        description = "Totalização de todos os registros existentes.",
                         schema = @Schema(implementation = Integer.class)))
     })
-    ResponseEntity<List<ClassificacaoOrcamentariaDTO>> get(
-            @Parameter(in = ParameterIn.QUERY,
-                    description = "Filtros de classificações orçamentárias") FiltroClassificacaoOrcamentaria filtros);
+    ResponseEntity<List<ClassificacaoOrcamentariaDTO>> get();
 
     @Operation(summary = "Lista classificação orçamentária",
             description = "Endpoint para a listagem detalhada de uma classificação orçamentária.",

@@ -11,7 +11,8 @@ import lombok.Setter;
 import org.hibernate.annotations.Where;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -43,10 +44,8 @@ public class ClassificacaoOrcamentaria implements Serializable {
     private ClassificacaoOrcamentaria pai;
 
     @JsonIgnore
-    @JoinColumn(name = "pai", updatable = false, insertable = false)
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "pai", fetch = FetchType.LAZY)
     private Set<ClassificacaoOrcamentaria> filhos;
-
 
     public static ClassificacaoOrcamentaria of(final ClassificacaoOrcamentaria pai, final String nome, final Boolean despesa) {
         ClassificacaoOrcamentaria classificacaoOrcamentaria = new ClassificacaoOrcamentaria();
@@ -80,9 +79,8 @@ public class ClassificacaoOrcamentaria implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ClassificacaoOrcamentaria that = (ClassificacaoOrcamentaria) o;
-        return despesa == that.despesa && ativo == that.ativo
-                && removido == that.removido && id.equals(that.id) && nome.equals(that.nome)
-                && Objects.equals(pai, that.pai) ;
+        return despesa == that.despesa && ativo == that.ativo && removido == that.removido
+                && id.equals(that.id) && nome.equals(that.nome) && Objects.equals(pai, that.pai);
     }
 
     @Override

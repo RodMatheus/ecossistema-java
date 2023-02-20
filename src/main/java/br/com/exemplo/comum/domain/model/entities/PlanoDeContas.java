@@ -11,8 +11,8 @@ import lombok.Setter;
 import org.hibernate.annotations.Where;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 @Entity
 @Getter
@@ -44,9 +44,8 @@ public class PlanoDeContas implements Serializable {
     private PlanoDeContas pai;
 
     @JsonIgnore
-    @JoinColumn(name = "pai", updatable = false, insertable = false)
-    @OneToMany(fetch = FetchType.LAZY)
-    private Set<PlanoDeContas> filhos;
+    @OneToMany(mappedBy = "pai")
+    private List<PlanoDeContas> filhos;
 
     public static PlanoDeContas of(final PlanoDeContas pai, final String nome, final Boolean despesa) {
         PlanoDeContas plano = new PlanoDeContas();

@@ -11,8 +11,8 @@ import lombok.Setter;
 import org.hibernate.annotations.Where;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 @Entity
 @Getter
@@ -44,8 +44,8 @@ public class ClassificacaoOrcamentaria implements Serializable {
     private ClassificacaoOrcamentaria pai;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "pai", fetch = FetchType.LAZY)
-    private Set<ClassificacaoOrcamentaria> filhos;
+    @OneToMany(mappedBy = "pai")
+    private List<ClassificacaoOrcamentaria> filhos;
 
     public static ClassificacaoOrcamentaria of(final ClassificacaoOrcamentaria pai, final String nome, final Boolean despesa) {
         ClassificacaoOrcamentaria classificacaoOrcamentaria = new ClassificacaoOrcamentaria();

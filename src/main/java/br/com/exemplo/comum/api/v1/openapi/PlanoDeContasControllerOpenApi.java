@@ -1,7 +1,6 @@
 package br.com.exemplo.comum.api.v1.openapi;
 
 import br.com.exemplo.comum.api.exceptionhandler.ErroDTO;
-import br.com.exemplo.comum.api.v1.filter.FiltroPlanoDeContas;
 import br.com.exemplo.comum.api.v1.model.dto.PlanoDeContasDTO;
 import br.com.exemplo.comum.api.v1.model.input.PlanoDeContasParam;
 import br.com.exemplo.comum.infrastructure.util.WebUtil;
@@ -21,7 +20,7 @@ import java.util.List;
 public interface PlanoDeContasControllerOpenApi {
 
     @Operation(summary = "Lista de planos de contas",
-        description = "Endpoint para a listagem de planos de contas com filtros.",
+        description = "Endpoint para a listagem de planos de contas.",
           responses = {
             @ApiResponse(responseCode = "500", description = WebUtil.INTERNAL_SERVER_DEFAULT_RESPONSE,
                 content = @Content(schema = @Schema(implementation = ErroDTO.class))),
@@ -32,8 +31,7 @@ public interface PlanoDeContasControllerOpenApi {
                         description = "Totalização de todos os registros existentes com os filtros selecionados.",
                         schema = @Schema(implementation = Integer.class)))
     })
-    ResponseEntity<List<PlanoDeContasDTO>> get(
-            @Parameter(in = ParameterIn.QUERY, description = "Filtros de planos de contas") FiltroPlanoDeContas filtros);
+    ResponseEntity<List<PlanoDeContasDTO>> get();
 
     @Operation(summary = "Lista plano de contas",
             description = "Endpoint para a listagem detalhada de um plano de contas.",

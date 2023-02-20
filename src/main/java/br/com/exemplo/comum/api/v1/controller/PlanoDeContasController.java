@@ -1,6 +1,5 @@
 package br.com.exemplo.comum.api.v1.controller;
 
-import br.com.exemplo.comum.api.v1.filter.FiltroPlanoDeContas;
 import br.com.exemplo.comum.api.v1.mapper.PlanoDeContasMapper;
 import br.com.exemplo.comum.api.v1.model.dto.PlanoDeContasDTO;
 import br.com.exemplo.comum.api.v1.model.input.PlanoDeContasParam;
@@ -39,16 +38,16 @@ public class PlanoDeContasController implements PlanoDeContasControllerOpenApi {
 
     @GetMapping
     @CheckSecurity.comum.all
-    public ResponseEntity<List<PlanoDeContasDTO>> get(FiltroPlanoDeContas filtros) {
+    public ResponseEntity<List<PlanoDeContasDTO>> get() {
         log.info("LISTAGEM DE PLANOS DE CONTAS");
         List<PlanoDeContasDTO> planosDeContasDTO = List.of();
 
-        log.info("Contando planos de contas por filtros. FILTROS: {}.", filtros);
-        final Long total = planoDeContasRepository.contaPorFiltros(filtros);
+        log.info("Contando planos de contas.");
+        final Long total = planoDeContasRepository.countAllPais();
 
         if(total > 0) {
             log.info("Pesquisando planos de contas.");
-            final List<PlanoDeContas> planosDeContas = planoDeContasRepository.pesquisaPorFiltros(filtros);
+            final List<PlanoDeContas> planosDeContas = planoDeContasRepository.findAllPais();
 
             log.info("Convertendo entidades de Planos de contas em DTO.");
             planosDeContasDTO = planoDeContasMapper.toResourceList(planosDeContas);

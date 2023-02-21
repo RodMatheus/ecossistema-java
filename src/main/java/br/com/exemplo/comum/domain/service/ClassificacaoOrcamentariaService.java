@@ -76,7 +76,7 @@ public class ClassificacaoOrcamentariaService {
 
     @Transactional
     @Lock(LockModeType.PESSIMISTIC_READ)
-    public ClassificacaoOrcamentaria inativaClassidicacaoOrcamentaria(final Long id) {
+    public ClassificacaoOrcamentaria inativaClassificacaoOrcamentaria(final Long id) {
         log.info("Verificando a existência da classificação orçamentária. ID: {}.", id);
         ClassificacaoOrcamentaria classificacaoOrcamentaria = this.existeClassificacao(id);
 
@@ -85,6 +85,26 @@ public class ClassificacaoOrcamentariaService {
 
         log.info("Inativando entidade(s) filhas de classificação orçamentaria");
         this.alteraStatusAtivoFilhos(classificacaoOrcamentaria.getFilhos(), Boolean.FALSE);
+
+        log.info("Gerando log de transação.");
+        LogAuditoria logAuditoria = LogAuditoria.ofAlteracao(SecurityUtil.getUsuarioLogado(),
+                Utilitarios.convertEntityLog(classificacaoOrcamentaria), ClassificacaoOrcamentaria.class);
+        logAuditoriaRepository.save(logAuditoria);
+
+        return classificacaoOrcamentaria;
+    }
+
+    @Transactional
+    @Lock(LockModeType.PESSIMISTIC_READ)
+    public ClassificacaoOrcamentaria ativaClassificacaoOrcamentaria(final Long id) {
+        log.info("Verificando a existência da classificação orçamentária. ID: {}.", id);
+        ClassificacaoOrcamentaria classificacaoOrcamentaria = this.existeClassificacao(id);
+
+        log.info("Ativando entidade(s) de classificação orçamentária.");
+        ClassificacaoOrcamentaria.ofAtivo(classificacaoOrcamentaria, Boolean.TRUE);
+
+        log.info("Ativando entidade(s) filhas de classificação orçamentaria");
+        this.alteraStatusAtivoFilhos(classificacaoOrcamentaria.getFilhos(), Boolean.TRUE);
 
         log.info("Gerando log de transação.");
         LogAuditoria logAuditoria = LogAuditoria.ofAlteracao(SecurityUtil.getUsuarioLogado(),

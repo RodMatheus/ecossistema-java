@@ -15,6 +15,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
+
+import java.util.List;
 
 @Service
 @Slf4j
@@ -67,6 +70,27 @@ public class ClassificacaoOrcamentariaService {
         LogAuditoria logAuditoria = LogAuditoria.ofAlteracao(SecurityUtil.getUsuarioLogado(),
                 Utilitarios.convertEntityLog(classificacaoOrcamentaria), ClassificacaoOrcamentaria.class);
         logAuditoriaRepository.save(logAuditoria);
+
+        return classificacaoOrcamentaria;
+    }
+
+    @Transactional
+    @Lock(LockModeType.PESSIMISTIC_READ)
+    public ClassificacaoOrcamentaria inativaClassidicacaoOrcamentaria(final Long id) {
+        log.info("Verificando a existência da classificação orçamentária. ID: {}.", id);
+        ClassificacaoOrcamentaria classificacaoOrcamentaria = this.existeClassificacao(id);
+
+        log.info("Inativando entidade(s) de classificação orçamentária.");
+        ClassificacaoOrcamentaria.ofAtivo(classificacaoOrcamentaria, Boolean.FALSE);
+
+        log.info("Inativando entidade(s) filhas de classificação orçamentaria");
+        this.alteraStatusAtivoFilhos(classificacaoOrcamentaria.getFilhos(), Boolean.FALSE);
+
+        log.info("Gerando log de transação.");
+        LogAuditoria logAuditoria = LogAuditoria.ofAlteracao(SecurityUtil.getUsuarioLogado(),
+                Utilitarios.convertEntityLog(classificacaoOrcamentaria), ClassificacaoOrcamentaria.class);
+        logAuditoriaRepository.save(logAuditoria);
+
         return classificacaoOrcamentaria;
     }
 
@@ -93,6 +117,23 @@ public class ClassificacaoOrcamentariaService {
         return classificacaoOrcamentariaRepository.findById(id)
                 .orElseThrow(() -> new RecursoNaoEncontradoException(
                         mensagemUtil.mensagemPersonalizada("erro.classificacao-orcamentaria-nao-encontrada")));
+    }
+
+    private void alteraStatusAtivoFilhos(List<ClassificacaoOrcamentaria> classificacoesOrcamentarias, Boolean status) {
+        for (ClassificacaoOrcamentaria classificacao : classificacoesOrcamentarias) {
+            log.info("Alterando status de ativação de classificação orçamentária.");
+            ClassificacaoOrcamentaria.ofAtivo(classificacao, status);
+
+            log.info("Gerando log de transação.");
+            LogAuditoria logAuditoria = LogAuditoria.ofAlteracao(SecurityUtil.getUsuarioLogado(),
+                    Utilitarios.convertEntityLog(classificacao), ClassificacaoOrcamentaria.class);
+            logAuditoriaRepository.save(logAuditoria);
+
+            log.info("Alterando status de ativação para filhos.");
+            if(!CollectionUtils.isEmpty(classificacao.getFilhos())) {
+                this.alteraStatusAtivoFilhos(classificacao.getFilhos(), status);
+            }
+        }
     }
 
     private ClassificacaoOrcamentaria validaCadastro(final ClassificacaoOrcamentariaParam classificacaoOrcamentariaParam) {

@@ -121,4 +121,19 @@ public class ClassificacaoOrcamentariaController implements ClassificacaoOrcamen
                 .noContent()
                 .build();
     }
+
+    @PatchMapping("/inativa/{id}")
+    @CheckSecurity.comum.maintain
+    public ResponseEntity<ClassificacaoOrcamentariaDTO> inactivate(@PathVariable Long id) {
+        log.info("INATIVAÇÃO DE CLASSIFICAÇÕES ORÇAMENTÁRIAS");
+
+        log.info("Iniciando processo de inativação de classificação orçamentaria.");
+        final ClassificacaoOrcamentaria classificacaoOrcamentaria = classificacaoOrcamentariaService.inativaClassidicacaoOrcamentaria(id);
+
+        log.info("Convertendo entidade de classificação orçamentária em DTO.");
+        final ClassificacaoOrcamentariaDTO classificacaoOrcamentariaDTO = classificacaoOrcamentariaMapper.toResource(classificacaoOrcamentaria);
+
+        log.info("Retornando resposta da operação. DTO: {}.", classificacaoOrcamentariaDTO);
+        return ResponseEntity.ok(classificacaoOrcamentariaDTO);
+    }
 }

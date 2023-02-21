@@ -109,4 +109,19 @@ public interface ClassificacaoOrcamentariaControllerOpenApi {
                     @ApiResponse(responseCode = "200")
             })
     ResponseEntity<ClassificacaoOrcamentariaDTO> inactivate(@Parameter(required = true, in = ParameterIn.PATH) Long id);
+
+    @Operation(summary = "Ativa classificação orçamentária",
+            description = "Endpoint para ativar uma classificação orçamentária e seus filhos respectivamente.",
+            responses = {
+                    @ApiResponse(responseCode = "500", description = WebUtil.INTERNAL_SERVER_DEFAULT_RESPONSE,
+                            content = @Content(schema = @Schema(implementation = ErroDTO.class))),
+                    @ApiResponse(responseCode = "404", description = WebUtil.NOT_FOUND_DEFAULT_RESPONSE,
+                            content = @Content(schema = @Schema(implementation = ErroDTO.class))),
+                    @ApiResponse(responseCode = "403", description = WebUtil.FORBIDDEN_DEFAULT_RESPONSE,
+                            content = @Content(schema = @Schema(implementation = ErroDTO.class))),
+                    @ApiResponse(responseCode = "401", description = WebUtil.UNAUTHORIZED_DEFAULT_RESPONSE,
+                            content = @Content(schema = @Schema(implementation = ErroDTO.class))),
+                    @ApiResponse(responseCode = "200")
+            })
+    ResponseEntity<ClassificacaoOrcamentariaDTO> activate(@Parameter(required = true, in = ParameterIn.PATH) Long id);
 }

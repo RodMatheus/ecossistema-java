@@ -133,4 +133,19 @@ public class PlanoDeContasController implements PlanoDeContasControllerOpenApi {
         log.info("Retornando resposta da operação. DTO: {}.", planoDeContasDTO);
         return ResponseEntity.ok(planoDeContasDTO);
     }
+
+    @PatchMapping("/ativa/{id}")
+    @CheckSecurity.comum.maintain
+    public ResponseEntity<PlanoDeContasDTO> activate(@PathVariable Long id) {
+        log.info("ATIVAÇÃO DE PLANOS DE CONTAS");
+
+        log.info("Iniciando processo de ativação de plano de contas.");
+        final PlanoDeContas planoDeContas = planoDeContasService.ativaPlanoDeContas(id);
+
+        log.info("Convertendo entidade de plano de contas em DTO.");
+        final PlanoDeContasDTO planoDeContasDTO = planoDeContasMapper.toResource(planoDeContas);
+
+        log.info("Retornando resposta da operação. DTO: {}.", planoDeContasDTO);
+        return ResponseEntity.ok(planoDeContasDTO);
+    }
 }

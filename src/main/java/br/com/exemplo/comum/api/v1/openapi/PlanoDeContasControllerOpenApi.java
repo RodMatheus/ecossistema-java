@@ -109,4 +109,19 @@ public interface PlanoDeContasControllerOpenApi {
                     @ApiResponse(responseCode = "200")
             })
     ResponseEntity<PlanoDeContasDTO> inactivate(@Parameter(required = true, in = ParameterIn.PATH) Long id);
+
+    @Operation(summary = "Ativa planos de contas",
+            description = "Endpoint para ativar um plano de contas e seus filhos respectivamente.",
+            responses = {
+                    @ApiResponse(responseCode = "500", description = WebUtil.INTERNAL_SERVER_DEFAULT_RESPONSE,
+                            content = @Content(schema = @Schema(implementation = ErroDTO.class))),
+                    @ApiResponse(responseCode = "404", description = WebUtil.NOT_FOUND_DEFAULT_RESPONSE,
+                            content = @Content(schema = @Schema(implementation = ErroDTO.class))),
+                    @ApiResponse(responseCode = "403", description = WebUtil.FORBIDDEN_DEFAULT_RESPONSE,
+                            content = @Content(schema = @Schema(implementation = ErroDTO.class))),
+                    @ApiResponse(responseCode = "401", description = WebUtil.UNAUTHORIZED_DEFAULT_RESPONSE,
+                            content = @Content(schema = @Schema(implementation = ErroDTO.class))),
+                    @ApiResponse(responseCode = "200")
+            })
+    ResponseEntity<PlanoDeContasDTO> activate(@Parameter(required = true, in = ParameterIn.PATH) Long id);
 }

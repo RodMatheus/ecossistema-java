@@ -118,4 +118,19 @@ public class PlanoDeContasController implements PlanoDeContasControllerOpenApi {
                 .noContent()
                 .build();
     }
+
+    @PatchMapping("/inativa/{id}")
+    @CheckSecurity.comum.maintain
+    public ResponseEntity<PlanoDeContasDTO> inactivate(@PathVariable Long id) {
+        log.info("INATIVAÇÃO DE PLANOS DE CONTAS");
+
+        log.info("Iniciando processo de inativação de plano de contas.");
+        final PlanoDeContas planoDeContas = planoDeContasService.inativaPlanoDeContas(id);
+
+        log.info("Convertendo entidade de plano de contas em DTO.");
+        final PlanoDeContasDTO planoDeContasDTO = planoDeContasMapper.toResource(planoDeContas);
+
+        log.info("Retornando resposta da operação. DTO: {}.", planoDeContasDTO);
+        return ResponseEntity.ok(planoDeContasDTO);
+    }
 }

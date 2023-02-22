@@ -83,7 +83,7 @@ public class ClassificacaoOrcamentariaService {
         log.info("Inativando entidade(s) de classificação orçamentária.");
         ClassificacaoOrcamentaria.ofAtivo(classificacaoOrcamentaria, Boolean.FALSE);
 
-        log.info("Inativando entidade(s) filhas de classificação orçamentaria");
+        log.info("Inativando entidade(s) filhas de classificação orçamentaria.");
         this.alteraStatusAtivoFilhos(classificacaoOrcamentaria.getFilhos(), Boolean.FALSE);
 
         log.info("Gerando log de transação.");
@@ -103,7 +103,7 @@ public class ClassificacaoOrcamentariaService {
         log.info("Ativando entidade(s) de classificação orçamentária.");
         ClassificacaoOrcamentaria.ofAtivo(classificacaoOrcamentaria, Boolean.TRUE);
 
-        log.info("Ativando entidade(s) filhas de classificação orçamentaria");
+        log.info("Ativando entidade(s) filhas de classificação orçamentaria.");
         this.alteraStatusAtivoFilhos(classificacaoOrcamentaria.getFilhos(), Boolean.TRUE);
 
         log.info("Gerando log de transação.");

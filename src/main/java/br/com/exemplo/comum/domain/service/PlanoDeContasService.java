@@ -15,6 +15,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
+
+import java.util.List;
 
 @Service
 @Slf4j
@@ -70,6 +73,26 @@ public class PlanoDeContasService {
 
     @Transactional
     @Lock(LockModeType.PESSIMISTIC_READ)
+    public PlanoDeContas inativaPlanoDeContas(final Long id) {
+        log.info("Verificando a existência do plano de contas. ID: {}.", id);
+        PlanoDeContas planoDeContas = this.existePlano(id);
+
+        log.info("Inativando entidade(s) de plano de contas.");
+        PlanoDeContas.ofAtivo(planoDeContas, Boolean.FALSE);
+
+        log.info("Inativando entidade(s) filhas de plano de contas.");
+        this.alteraStatusAtivoFilhos(planoDeContas.getFilhos(), Boolean.FALSE);
+
+        log.info("Gerando log de transação.");
+        LogAuditoria logAuditoria = LogAuditoria.ofAlteracao(SecurityUtil.getUsuarioLogado(),
+                Utilitarios.convertEntityLog(planoDeContas), PlanoDeContas.class);
+        logAuditoriaRepository.save(logAuditoria);
+
+        return planoDeContas;
+    }
+
+    @Transactional
+    @Lock(LockModeType.PESSIMISTIC_READ)
     public void removePlanoDeContas(final Long id) {
         log.info("Verificando a existência do plano de contas. ID: {}.", id);
         PlanoDeContas planoDeContas = this.existePlano(id);
@@ -91,6 +114,23 @@ public class PlanoDeContasService {
         return planoDeContasRepository.findById(id)
                 .orElseThrow(() -> new RecursoNaoEncontradoException(
                         mensagemUtil.mensagemPersonalizada("erro.plano-de-contas-nao-encontrado")));
+    }
+
+    private void alteraStatusAtivoFilhos(List<PlanoDeContas> planosDeContas, Boolean status) {
+        for (PlanoDeContas plano : planosDeContas) {
+            log.info("Alterando status de ativação de plano de contas.");
+            PlanoDeContas.ofAtivo(plano, status);
+
+            log.info("Gerando log de transação.");
+            LogAuditoria logAuditoria = LogAuditoria.ofAlteracao(SecurityUtil.getUsuarioLogado(),
+                    Utilitarios.convertEntityLog(plano), PlanoDeContas.class);
+            logAuditoriaRepository.save(logAuditoria);
+
+            log.info("Alterando status de ativação para filhos.");
+            if(!CollectionUtils.isEmpty(plano.getFilhos())) {
+                this.alteraStatusAtivoFilhos(plano.getFilhos(), status);
+            }
+        }
     }
 
     private PlanoDeContas validaCadastro(final PlanoDeContasParam planoDeContasParam) {

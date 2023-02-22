@@ -93,6 +93,26 @@ public class PlanoDeContasService {
 
     @Transactional
     @Lock(LockModeType.PESSIMISTIC_READ)
+    public PlanoDeContas ativaPlanoDeContas(final Long id) {
+        log.info("Verificando a existência do plano de contas. ID: {}.", id);
+        PlanoDeContas planoDeContas = this.existePlano(id);
+
+        log.info("Ativando entidade(s) de plano de contas.");
+        PlanoDeContas.ofAtivo(planoDeContas, Boolean.TRUE);
+
+        log.info("Ativando entidade(s) filhas de plano de contas.");
+        this.alteraStatusAtivoFilhos(planoDeContas.getFilhos(), Boolean.TRUE);
+
+        log.info("Gerando log de transação.");
+        LogAuditoria logAuditoria = LogAuditoria.ofAlteracao(SecurityUtil.getUsuarioLogado(),
+                Utilitarios.convertEntityLog(planoDeContas), PlanoDeContas.class);
+        logAuditoriaRepository.save(logAuditoria);
+
+        return planoDeContas;
+    }
+
+    @Transactional
+    @Lock(LockModeType.PESSIMISTIC_READ)
     public void removePlanoDeContas(final Long id) {
         log.info("Verificando a existência do plano de contas. ID: {}.", id);
         PlanoDeContas planoDeContas = this.existePlano(id);

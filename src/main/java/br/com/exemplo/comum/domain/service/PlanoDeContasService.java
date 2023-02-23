@@ -1,5 +1,7 @@
 package br.com.exemplo.comum.domain.service;
 
+import br.com.exemplo.comum.api.v1.mapper.PlanoDeContasMapper;
+import br.com.exemplo.comum.api.v1.model.dto.PlanoDeContasDTO;
 import br.com.exemplo.comum.api.v1.model.input.PlanoDeContasParam;
 import br.com.exemplo.comum.core.exception.RecursoNaoEncontradoException;
 import br.com.exemplo.comum.core.exception.ValidacaoException;
@@ -12,6 +14,7 @@ import br.com.exemplo.comum.infrastructure.util.SecurityUtil;
 import br.com.exemplo.comum.infrastructure.util.Utilitarios;
 import jakarta.persistence.LockModeType;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,16 +28,33 @@ public class PlanoDeContasService {
 
     private final PlanoDeContasRepository planoDeContasRepository;
     private final LogAuditoriaRepository logAuditoriaRepository;
+    private final PlanoDeContasMapper planoDeContasMapper;
     private final MensagemUtil mensagemUtil;
 
     public PlanoDeContasService(PlanoDeContasRepository planoDeContasRepository,
                                 LogAuditoriaRepository logAuditoriaRepository,
+                                PlanoDeContasMapper planoDeContasMapper,
                                 MensagemUtil mensagemUtil){
         this.planoDeContasRepository = planoDeContasRepository;
         this.logAuditoriaRepository = logAuditoriaRepository;
+        this.planoDeContasMapper = planoDeContasMapper;
         this.mensagemUtil = mensagemUtil;
 
     }
+
+    @Cacheable(cacheNames = "Planos", key = "#root.method.name")
+    public Long contaPaisPlanos() {
+        return planoDeContasRepository.countAllPais();
+    }
+
+    @Cacheable(cacheNames = "Planos", key = "#root.method.name")
+    public List<PlanoDeContasDTO> pesquisaPaisPlano() {
+        final List<PlanoDeContas> planosDeContas = planoDeContasRepository.findAllPais();
+
+        log.info("Convertendo entidades de Planos de contas em DTO.");
+        return planoDeContasMapper.toResourceList(planosDeContas);
+    }
+
     @Transactional
     public void cadastraPlanoDeContas(final PlanoDeContasParam planoDeContasParam) {
         log.info("Iniciando validações e recuperação de pai.");

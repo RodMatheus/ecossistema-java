@@ -6,7 +6,6 @@ import br.com.exemplo.comum.api.v1.model.input.ClassificacaoOrcamentariaParam;
 import br.com.exemplo.comum.api.v1.openapi.ClassificacaoOrcamentariaControllerOpenApi;
 import br.com.exemplo.comum.core.security.CheckSecurity;
 import br.com.exemplo.comum.domain.model.entities.ClassificacaoOrcamentaria;
-import br.com.exemplo.comum.domain.repository.ClassificacaoOrcamentariaRepository;
 import br.com.exemplo.comum.domain.service.ClassificacaoOrcamentariaService;
 import br.com.exemplo.comum.infrastructure.util.WebUtil;
 import jakarta.validation.Valid;
@@ -25,14 +24,11 @@ import java.util.List;
 public class ClassificacaoOrcamentariaController implements ClassificacaoOrcamentariaControllerOpenApi {
 
     private final ClassificacaoOrcamentariaService classificacaoOrcamentariaService;
-    private final ClassificacaoOrcamentariaRepository classificacaoOrcamentariaRepository;
     private final ClassificacaoOrcamentariaMapper classificacaoOrcamentariaMapper;
 
     public ClassificacaoOrcamentariaController(ClassificacaoOrcamentariaService classificacaoOrcamentariaService,
-                                               ClassificacaoOrcamentariaRepository classificacaoOrcamentariaRepository,
                                                ClassificacaoOrcamentariaMapper classificacaoOrcamentariaMapper) {
         this.classificacaoOrcamentariaService = classificacaoOrcamentariaService;
-        this.classificacaoOrcamentariaRepository = classificacaoOrcamentariaRepository;
         this.classificacaoOrcamentariaMapper = classificacaoOrcamentariaMapper;
     }
 
@@ -43,15 +39,11 @@ public class ClassificacaoOrcamentariaController implements ClassificacaoOrcamen
         List<ClassificacaoOrcamentariaDTO> classificacoesOrcamentariasDTO = List.of();
 
         log.info("Contando classificações orçamentárias.");
-        final Long total = classificacaoOrcamentariaRepository.countAllPais();
+        final Long total = classificacaoOrcamentariaService.contaPaisPlanos();
 
         if(total > 0) {
             log.info("Pesquisando classificações orçamentárias.");
-            final List<ClassificacaoOrcamentaria> classificacaoOrcamentarias = classificacaoOrcamentariaRepository
-                    .findAllPais();
-
-            log.info("Convertendo entidades de Planos de contas em DTO.");
-            classificacoesOrcamentariasDTO = classificacaoOrcamentariaMapper.toResourceList(classificacaoOrcamentarias);
+            classificacoesOrcamentariasDTO = classificacaoOrcamentariaService.pesquisaPaisPlanos();
         }
 
         log.info("Retornando dtos de resposta.");

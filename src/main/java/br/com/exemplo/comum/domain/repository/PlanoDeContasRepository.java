@@ -41,7 +41,7 @@ public interface PlanoDeContasRepository extends JpaRepository<PlanoDeContas, Lo
     boolean validaPai(Long pai);
 
     @Query("FROM PlanoDeContas p " +
-            "LEFT JOIN p.filhos " +
+            "LEFT JOIN FETCH p.filhos " +
             "WHERE p.pai is null " +
             "ORDER BY p.id ASC")
     List<PlanoDeContas> findAllPais();

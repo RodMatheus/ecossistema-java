@@ -16,7 +16,7 @@ services:
     networks:
       backing-services:
         ipv4_address: 172.16.238.101
-  keycloak-dev:
+  comum-keycloak:
     extends:
       file: ./keycloak/docker-compose.yaml
       service: comum-keycloak
@@ -26,9 +26,15 @@ services:
     depends_on:
       comum-postgres:
         condition: service_healthy
+  comum-redis:
+    extends:
+      file: ./redis/docker-compose.yaml
+      service: comum-redis
+    networks:
+      backing-services:
+        ipv4_address: 172.16.238.109
 networks:
   backing-services:
-    name: backing-services
     driver: bridge
     enable_ipv6: false
     ipam:

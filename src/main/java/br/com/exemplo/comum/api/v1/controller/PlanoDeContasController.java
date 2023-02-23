@@ -6,7 +6,6 @@ import br.com.exemplo.comum.api.v1.model.input.PlanoDeContasParam;
 import br.com.exemplo.comum.api.v1.openapi.PlanoDeContasControllerOpenApi;
 import br.com.exemplo.comum.core.security.CheckSecurity;
 import br.com.exemplo.comum.domain.model.entities.PlanoDeContas;
-import br.com.exemplo.comum.domain.repository.PlanoDeContasRepository;
 import br.com.exemplo.comum.domain.service.PlanoDeContasService;
 import br.com.exemplo.comum.infrastructure.util.WebUtil;
 import jakarta.validation.Valid;
@@ -25,14 +24,11 @@ import java.util.List;
 public class PlanoDeContasController implements PlanoDeContasControllerOpenApi {
 
     private final PlanoDeContasService planoDeContasService;
-    private final PlanoDeContasRepository planoDeContasRepository;
     private final PlanoDeContasMapper planoDeContasMapper;
 
     public PlanoDeContasController(PlanoDeContasService planoDeContasService,
-                                   PlanoDeContasRepository planoDeContasRepository,
                                    PlanoDeContasMapper planoDeContasMapper) {
         this.planoDeContasService = planoDeContasService;
-        this.planoDeContasRepository = planoDeContasRepository;
         this.planoDeContasMapper = planoDeContasMapper;
     }
 
@@ -43,14 +39,11 @@ public class PlanoDeContasController implements PlanoDeContasControllerOpenApi {
         List<PlanoDeContasDTO> planosDeContasDTO = List.of();
 
         log.info("Contando planos de contas.");
-        final Long total = planoDeContasRepository.countAllPais();
+        final Long total = planoDeContasService.contaPaisPlanos();
 
         if(total > 0) {
             log.info("Pesquisando planos de contas.");
-            final List<PlanoDeContas> planosDeContas = planoDeContasRepository.findAllPais();
-
-            log.info("Convertendo entidades de Planos de contas em DTO.");
-            planosDeContasDTO = planoDeContasMapper.toResourceList(planosDeContas);
+            planosDeContasDTO = planoDeContasService.pesquisaPaisPlano();
         }
 
         log.info("Retornando dtos de resposta. DTOS: {}.", planosDeContasDTO);

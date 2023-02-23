@@ -1,5 +1,7 @@
 package br.com.exemplo.comum.domain.service;
 
+import br.com.exemplo.comum.api.v1.mapper.ClassificacaoOrcamentariaMapper;
+import br.com.exemplo.comum.api.v1.model.dto.ClassificacaoOrcamentariaDTO;
 import br.com.exemplo.comum.api.v1.model.input.ClassificacaoOrcamentariaParam;
 import br.com.exemplo.comum.core.exception.RecursoNaoEncontradoException;
 import br.com.exemplo.comum.core.exception.ValidacaoException;
@@ -12,6 +14,7 @@ import br.com.exemplo.comum.infrastructure.util.SecurityUtil;
 import br.com.exemplo.comum.infrastructure.util.Utilitarios;
 import jakarta.persistence.LockModeType;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,15 +28,31 @@ public class ClassificacaoOrcamentariaService {
 
     private final ClassificacaoOrcamentariaRepository classificacaoOrcamentariaRepository;
     private final LogAuditoriaRepository logAuditoriaRepository;
+    private final ClassificacaoOrcamentariaMapper classificacaoOrcamentariaMapper;
     private final MensagemUtil mensagemUtil;
 
     public ClassificacaoOrcamentariaService(ClassificacaoOrcamentariaRepository classificacaoOrcamentariaRepository,
                                             LogAuditoriaRepository logAuditoriaRepository,
+                                            ClassificacaoOrcamentariaMapper classificacaoOrcamentariaMapper,
                                             MensagemUtil mensagemUtil){
         this.classificacaoOrcamentariaRepository = classificacaoOrcamentariaRepository;
         this.logAuditoriaRepository = logAuditoriaRepository;
+        this.classificacaoOrcamentariaMapper = classificacaoOrcamentariaMapper;
         this.mensagemUtil = mensagemUtil;
 
+    }
+
+    @Cacheable(cacheNames = "Classificacoes", key = "#root.method.name")
+    public Long contaPaisPlanos() {
+        return classificacaoOrcamentariaRepository.countAllPais();
+    }
+
+    @Cacheable(cacheNames = "Classificacoes", key = "#root.method.name")
+    public List<ClassificacaoOrcamentariaDTO> pesquisaPaisPlanos() {
+        final List<ClassificacaoOrcamentaria> classificacaoOrcamentarias = classificacaoOrcamentariaRepository.findAllPais();
+
+        log.info("Convertendo entidades de Planos de contas em DTO.");
+        return classificacaoOrcamentariaMapper.toResourceList(classificacaoOrcamentarias);
     }
     @Transactional
     public void cadastraClassificacaoOrcamentaria(final ClassificacaoOrcamentariaParam classificacaoOrcamentariaParam) {

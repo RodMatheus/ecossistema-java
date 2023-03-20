@@ -1,0 +1,13 @@
+version: '3.8'
+volumes:
+  comum_data:
+    driver: local
+services:
+  comum-postgres:
+    extends:
+      file: postgres/docker-compose.yml
+      service: comum-postgres
+  comum-redis:
+    extends:
+      file: ./redis/docker-compose.yaml
+      service: comum-redis

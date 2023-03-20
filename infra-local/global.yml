@@ -1,0 +1,13 @@
+version: '3.8'
+volumes:
+  global_data:
+    driver: local
+services:
+  global-postgres:
+    extends:
+      file: postgres/global-postgres.yml
+      service: global-postgres
+  global-keycloak:
+    extends:
+      file: keycloak/global-keycloak.yml
+      service: global-keycloak

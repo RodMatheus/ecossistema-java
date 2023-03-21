@@ -1,0 +1,6 @@
+version: '3.8'
+services:
+  global-logstash:
+    image: logstash:7.17.9
+    environment:
+      ELASTICSEARCH_HOSTS: http://global-elasticsearch:9200

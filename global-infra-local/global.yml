@@ -1,0 +1,31 @@
+version: '3.8'
+volumes:
+  global_data:
+    driver: local
+  elasticsearch_data:
+      driver: local
+services:
+  global-postgres:
+    extends:
+      file: postgres/global-postgres.yml
+      service: global-postgres
+  global-keycloak:
+    extends:
+      file: keycloak/global-keycloak.yml
+      service: global-keycloak
+  global-elasticsearch:
+    extends:
+      file: elasticsearch/elasticsearch.yml
+      service: global-elasticsearch
+  global-kibana:
+    extends:
+      file: kibana/kibana.yml
+      service: global-kibana
+    depends_on:
+      - global-elasticsearch
+  global-logstash:
+    extends:
+      file: logstash/logstash.yml
+      service: global-logstash
+    depends_on:
+      - global-elasticsearch

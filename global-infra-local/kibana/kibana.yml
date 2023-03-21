@@ -1,0 +1,8 @@
+version: '3.8'
+services:
+  global-kibana:
+    image: kibana:7.17.9
+    environment:
+      ELASTICSEARCH_HOSTS: http://global-elasticsearch:9200
+    ports:
+      - "5601:5601"

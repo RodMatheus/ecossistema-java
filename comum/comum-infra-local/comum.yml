@@ -5,9 +5,9 @@ volumes:
 services:
   comum-postgres:
     extends:
-      file: postgres/docker-compose.yml
+      file: postgres/postgres.yml
       service: comum-postgres
   comum-redis:
     extends:
-      file: ./redis/docker-compose.yaml
+      file: redis/redis.yaml
       service: comum-redis

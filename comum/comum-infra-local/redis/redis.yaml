@@ -1,6 +1,7 @@
 version: '3'
 services:
   comum-redis:
+    container_name: comum-redis
     image: redis
     command: redis-server --requirepass Redis2023!
     ports:

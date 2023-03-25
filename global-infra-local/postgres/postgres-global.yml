@@ -1,7 +1,7 @@
 version: '3.8'
 services:
-  global-postgres:
-    container_name: global-postgres
+  postgres-global:
+    container_name: postgres-global
     image: postgres
     volumes:
       - global_data:/var/lib/postgres/data

@@ -1,10 +1,11 @@
 version: '3.8'
 services:
-  global-keycloak:
+  keycloak:
     image: quay.io/keycloak/keycloak:20.0.0
+    container_name: keycloak
     environment:
       KC_DB: postgres
-      KC_DB_URL: jdbc:postgresql://global-postgres:5432/keycloak
+      KC_DB_URL: jdbc:postgresql://postgres-global:5432/keycloak
       KC_DB_SCHEMA: public
       KC_DB_USERNAME: postgres
       KC_DB_PASSWORD: postgres

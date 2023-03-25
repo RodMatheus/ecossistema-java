@@ -5,27 +5,29 @@ volumes:
   elasticsearch_data:
       driver: local
 services:
-  global-postgres:
+  postgres-global:
     extends:
-      file: postgres/global-postgres.yml
-      service: global-postgres
-  global-keycloak:
+      file: postgres/postgres-global.yml
+      service: postgres-global
+  keycloak:
     extends:
-      file: keycloak/global-keycloak.yml
-      service: global-keycloak
-  global-elasticsearch:
+      file: keycloak/keycloak.yml
+      service: keycloak
+    depends_on:
+      - postgres-global
+  elasticsearch:
     extends:
       file: elasticsearch/elasticsearch.yml
-      service: global-elasticsearch
-  global-kibana:
+      service: elasticsearch
+  kibana:
     extends:
       file: kibana/kibana.yml
-      service: global-kibana
+      service: kibana
     depends_on:
-      - global-elasticsearch
-  global-logstash:
+      - elasticsearch
+  logstash:
     extends:
       file: logstash/logstash.yml
-      service: global-logstash
+      service: logstash
     depends_on:
-      - global-elasticsearch
+      - elasticsearch

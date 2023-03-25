@@ -3,8 +3,6 @@ services:
   comum-postgres:
     container_name: comum-postgres
     image: postgres
-    ports:
-      - "5432:5432"
     volumes:
       - comum_data:/var/lib/postgres/data
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
@@ -12,4 +10,6 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+    ports:
+      - "5433:5432"

@@ -1,5 +1,6 @@
 package br.com.exemplo.comum.core.security;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,6 +19,7 @@ import java.time.Duration;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
+@Slf4j
 public class ResourceServerConfig {
 
     @Value(value = "${spring.security.oauth2.resourceserver.jwt.issuer-uri}")
@@ -28,6 +30,8 @@ public class ResourceServerConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
+           .csrf()
+                .and()
            .cors()
                 .and().
            authorizeHttpRequests(auth -> auth
@@ -40,6 +44,8 @@ public class ResourceServerConfig {
            .oauth2ResourceServer()
                 .jwt()
                     .jwtAuthenticationConverter(jwtAuthenticationConverter());
+
+        log.info("Retornando filtro de securança: FILTRO {}.", http.build());
         return http.build();
     }
 
@@ -52,6 +58,7 @@ public class ResourceServerConfig {
         JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
         jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(grantedAuthoritiesConverter);
 
+        log.info("Retornando conversor de autenticação: CONVERSOR {}.", jwtAuthenticationConverter);
         return jwtAuthenticationConverter;
     }
 
@@ -60,10 +67,12 @@ public class ResourceServerConfig {
         NimbusJwtDecoder jwtDecoder = JwtDecoders.fromIssuerLocation(issuerUri);
 
         OAuth2TokenValidator<Jwt> withClockSkew = new DelegatingOAuth2TokenValidator<>(
-                new JwtTimestampValidator(Duration.ofSeconds(60)),
+                new JwtTimestampValidator(Duration.ofSeconds(600)),
                 new JwtIssuerValidator(issuerUri));
 
         jwtDecoder.setJwtValidator(withClockSkew);
+
+        log.info("Retornando decodificador de token: DECODIFICADOR {}.", jwtDecoder);
         return jwtDecoder;
     }
 }

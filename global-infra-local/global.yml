@@ -9,25 +9,40 @@ services:
     extends:
       file: postgres/postgres-global.yml
       service: postgres-global
+    networks:
+      - ecossistema
   keycloak:
     extends:
       file: keycloak/keycloak.yml
       service: keycloak
+    networks:
+      - ecossistema
     depends_on:
       - postgres-global
   elasticsearch:
     extends:
       file: elasticsearch/elasticsearch.yml
       service: elasticsearch
+    networks:
+      - ecossistema
   kibana:
     extends:
       file: kibana/kibana.yml
       service: kibana
+    networks:
+      - ecossistema
     depends_on:
       - elasticsearch
   logstash:
     extends:
       file: logstash/logstash.yml
       service: logstash
+    networks:
+      - ecossistema
     depends_on:
       - elasticsearch
+networks:
+  ecossistema:
+    name: ecossistema
+    driver: bridge
+    external: false

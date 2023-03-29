@@ -45,4 +45,3 @@ networks:
   ecossistema:
     name: ecossistema
     driver: bridge
-    external: false

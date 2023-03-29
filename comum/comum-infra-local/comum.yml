@@ -15,15 +15,6 @@ services:
       service: comum-redis
     networks:
       - ecossistema
-  comum-api:
-    extends:
-      service: comum-api
-      file: api/api.yml
-    networks:
-      - ecossistema
-    depends_on:
-      - comum-postgres
-      - comum-redis
 networks:
   ecossistema:
     name: ecossistema

@@ -1,9 +1,0 @@
-version: '3.8'
-services:
-  comum-api:
-    container_name: comum-api
-    image: comum-api
-    env_file:
-      - ../../.env
-    ports:
-      - "8080:8080"

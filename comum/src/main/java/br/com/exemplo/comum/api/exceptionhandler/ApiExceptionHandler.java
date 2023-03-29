@@ -57,8 +57,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(AccessDeniedException.class)
-    public final ResponseEntity<ErroDTO> handleAccessDeniedExceptions(
-            AccessDeniedException ex, WebRequest request) {
+    public final ResponseEntity<ErroDTO> handleAccessDeniedExceptions(AccessDeniedException ex, WebRequest request) {
         log.info(ex.getMessage(), ex);
 
         final String mensagem = mensagemUtil.mensagemPersonalizada("erro.autorizacao");
@@ -68,8 +67,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(AcessoNaoAutorizadoException.class)
-    public final ResponseEntity<ErroDTO> handleAcessoNaoAutorizadoExceptions(
-            AcessoNaoAutorizadoException ex, WebRequest request) {
+    public final ResponseEntity<ErroDTO> handleAcessoNaoAutorizadoExceptions(AcessoNaoAutorizadoException ex, WebRequest request) {
         log.info(ex.getMessage(), ex);
 
         final String mensagem = mensagemUtil.mensagemPersonalizada("erro.autorizacao");
@@ -79,8 +77,8 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(AcessoNegadoException.class)
-    public final ResponseEntity<ErroDTO> handleAcessoNegadoExceptionExceptions(
-            AcessoNegadoException ex, WebRequest request) {
+    public final ResponseEntity<ErroDTO> handleAcessoNegadoExceptionExceptions(AcessoNegadoException ex, WebRequest request) {
+
         log.info(ex.getMessage(), ex);
         return ResponseEntity
                 .status(HttpStatus.FORBIDDEN)

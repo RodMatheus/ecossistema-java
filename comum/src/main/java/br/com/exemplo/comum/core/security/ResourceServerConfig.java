@@ -28,6 +28,8 @@ public class ResourceServerConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
+           .csrf()
+                .and()
            .cors()
                 .and().
            authorizeHttpRequests(auth -> auth
@@ -40,6 +42,7 @@ public class ResourceServerConfig {
            .oauth2ResourceServer()
                 .jwt()
                     .jwtAuthenticationConverter(jwtAuthenticationConverter());
+
         return http.build();
     }
 
@@ -60,10 +63,11 @@ public class ResourceServerConfig {
         NimbusJwtDecoder jwtDecoder = JwtDecoders.fromIssuerLocation(issuerUri);
 
         OAuth2TokenValidator<Jwt> withClockSkew = new DelegatingOAuth2TokenValidator<>(
-                new JwtTimestampValidator(Duration.ofSeconds(60)),
+                new JwtTimestampValidator(Duration.ofSeconds(600)),
                 new JwtIssuerValidator(issuerUri));
 
         jwtDecoder.setJwtValidator(withClockSkew);
+
         return jwtDecoder;
     }
 }

@@ -7,7 +7,16 @@ services:
     extends:
       file: postgres/postgres.yml
       service: comum-postgres
+    networks:
+      - ecossistema
   comum-redis:
     extends:
-      file: redis/redis.yaml
+      file: redis/redis.yml
       service: comum-redis
+    networks:
+      - ecossistema
+networks:
+  ecossistema:
+    name: ecossistema
+    driver: bridge
+    external: false

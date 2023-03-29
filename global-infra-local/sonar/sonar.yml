@@ -1,0 +1,15 @@
+version: '3.8'
+services:
+  sonar:
+    container_name: sonar
+    image: sonarqube:lts-community
+    volumes:
+      - sonar_data:/opt/SonarQube/data
+      - sonar_extensions:/opt/SonarQube/extensions
+      - sonar_logs:/opt/SonarQube/logs
+    environment:
+      SONAR_JDBC_URL: jdbc:postgresql://postgres-global:5432/sonar
+      SONAR_JDBC_USERNAME: postgres
+      SONAR_JDBC_PASSWORD: postgres
+    ports:
+      - "9000:9000"

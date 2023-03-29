@@ -3,7 +3,13 @@ volumes:
   global_data:
     driver: local
   elasticsearch_data:
-      driver: local
+    driver: local
+  sonar_data:
+    driver: local
+  sonar_extensions:
+    driver: local
+  sonar_logs:
+    driver: local
 services:
   postgres-global:
     extends:
@@ -15,6 +21,14 @@ services:
     extends:
       file: keycloak/keycloak.yml
       service: keycloak
+    networks:
+      - ecossistema
+    depends_on:
+      - postgres-global
+  sonar:
+    extends:
+      file: sonar/sonar.yml
+      service: sonar
     networks:
       - ecossistema
     depends_on:
